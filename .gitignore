@@ -14,3 +14,4 @@ lgj2019-game-test-*
 *.obj
 *.lst
 office-brawl
+content/*

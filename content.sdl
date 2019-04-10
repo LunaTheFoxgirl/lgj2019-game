@@ -12,5 +12,6 @@ path:input "raw/"
 
 // Basic recipe
 recipe name="Main" {
-    // Insert recipe items here.    
+    // Insert recipe items here.
+    texture "ph-ground.png" type="png"
 }
