@@ -8,7 +8,7 @@ class MainGameState : GameState {
 
     }
 
-    override void Draw(SpriteBatch spriteBatch, GameTime gameTime) {
+    override void Draw(SpriteBatch spriteBatch, GameTimes gameTime) {
 
     }
 

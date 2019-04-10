@@ -2,8 +2,17 @@ module gamemain;
 import polyplex;
 import game.gamestate;
 
-
 public class GameMain : Game {
+private:
+
+    ref getContent() {
+        return Content;
+    }
+
+    ref getSpriteBatch() {
+        return sprite_batch;
+    }
+
 public:
     override void Init() {
         // Enable VSync
@@ -17,7 +26,7 @@ public:
         // You can prefix the path in the Load function to load a raw file.
 
         // Initialize GameContext
-        GameContext.init(this);
+        GameContext.initContext(this);
 
         // Start game state managment
         import game.gamestates.mainstate : MainGameState;
@@ -40,20 +49,20 @@ public:
 }
 
 
-class GameContext {
-private:
-    Game game;
+public class GameContext {
+private static:
+    GameMain game;
 
-    void init(Game game) {
+    static void initContext(GameMain game) {
         this.game = game;
     }
-public:
+public static:
 
     ref ContentManager Content() {
-        return game.Content;
+        return game.getContent();
     }
 
-    ref SpriteBatch SpriteBatch() {
-        return game.sprite_batch;
+    ref SpriteBatch spriteBatch() {
+        return game.getSpriteBatch();
     }
 }
