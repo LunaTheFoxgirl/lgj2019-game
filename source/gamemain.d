@@ -14,6 +14,10 @@ private:
     }
 
 public:
+    ~this() {
+        UnloadContent();
+    }
+
     override void Init() {
         // Enable VSync
         Window.VSync = VSyncState.VSync;
@@ -31,11 +35,13 @@ public:
         // Start game state managment
         import game.gamestates.mainstate : MainGameState;
         GameStateManager.Push(new MainGameState());
-        GameStateManager.Init(Content);
+        GameStateManager.Init();
+        GameStateManager.LoadContent(Content);
     }
 
     override void UnloadContent() {
         // Use the D function destroy(T) to unload content.
+        GameStateManager.onDestroy();
     }
 
     override void Update(GameTimes gameTime) {
