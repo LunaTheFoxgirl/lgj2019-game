@@ -1,0 +1,16 @@
+// The default author to be listed for files
+info:author "Clipsey"
+
+// The default license to be listed for files
+info:license "GPL-2"
+
+// Output folder (what your game should read)
+path:output "content/"
+
+// Input folder (where your raw content (.png, .mp3, etc.) should be)
+path:input "raw/"
+
+// Basic recipe
+recipe name="Main" {
+    // Insert recipe items here.    
+}

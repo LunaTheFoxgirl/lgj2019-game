@@ -1,0 +1,14 @@
+{
+	"name": "office-brawl",
+	"targetName": "office-brawl",
+	"description": "An office brawler",
+	"authors": [
+		"Clipsey",
+		"Shramper"
+	],
+	"copyright": "Copyright © 2019, Clipsey",
+	"license": "GPL-2",
+	"dependencies": {
+		"pp": "~>0.0.51"
+	}
+}
