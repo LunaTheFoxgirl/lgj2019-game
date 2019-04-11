@@ -2,7 +2,7 @@
 info:author "Clipsey"
 
 // The default license to be listed for files
-info:license "GPL-2"
+info:license "BSD 2-clause"
 
 // Output folder (what your game should read)
 path:output "content/"
