@@ -32,8 +32,9 @@ recipe name="Data" path="exdata/" {
 }
 
 recipe name="Music" {
-    audio "music/01.ogg" type="ogg"
-    audio "music/02.ogg" type="ogg"
-    audio "music/03.ogg" type="ogg"
-    audio "music/04.ogg" type="ogg"
+    //    Path           Type       Author of music
+    audio "music/01.ogg" type="ogg" author="Hydra" license="All Rights Reserved"
+    audio "music/02.ogg" type="ogg" author="Hydra" license="All Rights Reserved"
+    audio "music/03.ogg" type="ogg" author="Hydra" license="All Rights Reserved"
+    audio "music/04.ogg" type="ogg" author="Hydra" license="All Rights Reserved"
 }
