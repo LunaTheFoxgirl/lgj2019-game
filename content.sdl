@@ -10,9 +10,30 @@ path:output "content/"
 // Input folder (where your raw content (.png, .mp3, etc.) should be)
 path:input "raw/"
 
-// Basic recipe
-recipe name="Main" {
-    // Insert recipe items here.
-    texture "ph-ground.png" type="png"
-    texture "ph-player.png" type="png"
+recipe name="Shaders" path="shaders/" {
+
+}
+
+recipe name="SoundEffects" path="sfx/" {
+
+}
+
+recipe name="Textures" path="textures/" {
+    // PLACEHOLDERS
+    texture "placeholders/ph-ground.png" type="png"
+    texture "placeholders/ph-player.png" type="png"
+    
+    // Player textures
+
+}
+
+recipe name="Data" path="exdata/" {
+
+}
+
+recipe name="Music" {
+    audio "music/01.ogg" type="ogg"
+    audio "music/02.ogg" type="ogg"
+    audio "music/03.ogg" type="ogg"
+    audio "music/04.ogg" type="ogg"
 }

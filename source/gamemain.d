@@ -64,7 +64,7 @@ private static:
     }
 public static:
 
-    ref ContentManager Content() {
+    ref ContentManager content() {
         return game.getContent();
     }
 

@@ -10,5 +10,6 @@
 	"license": "GPL-2",
 	"dependencies": {
 		"pp": "~>0.0.51"
-	}
+	},
+	"preBuildCommands": ["rm -r content/", "ppcc -v"]
 }
