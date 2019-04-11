@@ -20,8 +20,8 @@ recipe name="SoundEffects" path="sfx/" {
 
 recipe name="Textures" path="textures/" {
     // PLACEHOLDERS
-    texture "placeholders/ph-ground.png" type="png"
-    texture "placeholders/ph-player.png" type="png"
+    texture "placeholders/ph-ground.png"    type="png"          license="WTFPL"
+    texture "placeholders/ph-player.png"    type="png"          license="WTFPL"
     
     // Player textures
 
@@ -32,9 +32,9 @@ recipe name="Data" path="exdata/" {
 }
 
 recipe name="Music" {
-    //    Path              Type           Author of music     License of the music
-    audio "music/01.ogg"    type="ogg"     author="Hydra"      license="CC (Creative Commons)"
-    audio "music/02.ogg"    type="ogg"     author="Hydra"      license="CC (Creative Commons)"
-    audio "music/03.ogg"    type="ogg"     author="Hydra"      license="CC (Creative Commons)"
-    audio "music/04.ogg"    type="ogg"     author="Hydra"      license="CC (Creative Commons)"
+    //    Path              Type           Author of music      License of the music
+    audio "music/01.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
+    audio "music/02.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
+    audio "music/03.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
+    audio "music/04.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
 }
