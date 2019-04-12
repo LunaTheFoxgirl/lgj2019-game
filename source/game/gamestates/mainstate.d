@@ -5,6 +5,10 @@ import game.gamestate;
 /// The main game state that is the root of the game
 class MainGameState : GameState {
 public:
+    this() {
+        this.Name = "State Bootstrapper";
+    }
+
     ~this() {
 
     }
@@ -18,7 +22,8 @@ public:
     }
 
     override void Init() {
-
+        import game.gamestates.ingamestate;
+        GameStateManager.Push(new IngameState());
     }
 
     override void LoadContent(ContentManager content) {

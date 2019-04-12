@@ -7,7 +7,8 @@ private:
     __gshared GameState[] gameStateStack;
 
 public static:
-    void Push(GameState state) {
+    void Push(GameState state, string from = __MODULE__) {
+        Logger.Debug("Pushed {0} from {1}!", state.Name, from);
         gameStateStack ~= state;
     }
 
@@ -67,6 +68,8 @@ public static:
 
 abstract class GameState {
 public:
+    string Name;
+
     abstract void Update(GameTimes gameTime);
     abstract void Draw(SpriteBatch spriteBatch, GameTimes gameTime);
     abstract void Init();

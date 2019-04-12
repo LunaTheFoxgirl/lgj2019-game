@@ -9,7 +9,8 @@
 	"copyright": "Copyright © 2019, Clipsey",
 	"license": "BSD 2-clause",
 	"dependencies": {
-		"pp": "~>0.0.51"
+		"sdlang-d": "~>0.10.5",
+		"pp": "~>0.0.52"
 	},
 	"preBuildCommands": ["rm -r content/", "ppcc -v"]
 }

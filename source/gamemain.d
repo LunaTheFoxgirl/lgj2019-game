@@ -71,4 +71,8 @@ public static:
     ref SpriteBatch spriteBatch() {
         return game.getSpriteBatch();
     }
+
+    Window gameWindow() {
+        return game.Window();
+    }
 }
