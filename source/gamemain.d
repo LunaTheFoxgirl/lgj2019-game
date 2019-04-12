@@ -1,6 +1,7 @@
 module gamemain;
 import polyplex;
 import game.gamestate;
+import game.content;
 
 public class GameMain : Game {
 private:
@@ -36,12 +37,13 @@ public:
         import game.gamestates.mainstate : MainGameState;
         GameStateManager.Push(new MainGameState());
         GameStateManager.Init();
-        GameStateManager.LoadContent(Content);
+
+        setupGameCache();
     }
 
     override void UnloadContent() {
         // Use the D function destroy(T) to unload content.
-        GameStateManager.onDestroy();
+        cleanupGameCache();
     }
 
     override void Update(GameTimes gameTime) {

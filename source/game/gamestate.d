@@ -10,11 +10,12 @@ public static:
     void Push(GameState state, string from = __MODULE__) {
         Logger.Debug("Pushed {0} from {1}!", state.Name, from);
         gameStateStack ~= state;
+        state.Init();
     }
 
     void Pop() {
         if (gameStateStack.length > 0) {
-            UnloadContent();
+            destroy(gameStateStack[$-1]);
 
             /// Force GC to collect the memory of the now ready state
             ForceFree();
@@ -42,28 +43,6 @@ public static:
         if (gameStateStack.length == 0) return;
         gameStateStack[$-(1+offset)].Init();
     }
-
-    void LoadContent(ContentManager content, size_t offset = 0) {
-        if (gameStateStack.length == 0) return;
-        gameStateStack[$-(1+offset)].LoadContent(content);
-    }
-
-    void UnloadContent(size_t offset = 0) {
-        if (gameStateStack.length == 0) return;
-        gameStateStack[$-(1+offset)].UnloadContent();
-    }
-    
-    void onDestroy() {
-        foreach_reverse(state; gameStateStack) {
-            state.UnloadContent();
-        }
-
-        /// Force GC to collect the memory of the now ready states
-        ForceFree();
-
-        // Then destroy the stack.
-        destroy(gameStateStack);
-    }
 }
 
 abstract class GameState {
@@ -73,6 +52,4 @@ public:
     abstract void Update(GameTimes gameTime);
     abstract void Draw(SpriteBatch spriteBatch, GameTimes gameTime);
     abstract void Init();
-    abstract void LoadContent(ContentManager content);
-    abstract void UnloadContent();
 }

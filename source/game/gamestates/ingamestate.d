@@ -13,26 +13,18 @@ public:
         this.Name = "Ingame State";
     }
 
-
     override void Init() {
         gameWorld = new World();
+        gameWorld.Init();
 
         //TODO: generate world based on data
     }
 
-    override void LoadContent(ContentManager content) {
-
-    }
-
-    override void UnloadContent() {
-        
-    }
-
     override void Update(GameTimes gameTime) {
-
+        gameWorld.Update();
     }
 
     override void Draw(SpriteBatch spriteBatch, GameTimes gameTime) {
-
+        gameWorld.Draw();
     }
 }

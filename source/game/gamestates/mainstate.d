@@ -25,12 +25,4 @@ public:
         import game.gamestates.ingamestate;
         GameStateManager.Push(new IngameState());
     }
-
-    override void LoadContent(ContentManager content) {
-
-    }
-
-    override void UnloadContent() {
-
-    }
 }
