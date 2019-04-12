@@ -11,7 +11,10 @@
 		"ppc": "0.2.2",
 		"sdlang-d": "0.10.5",
 		"sharpevents": "1.0.2",
+		"stdx-allocator": "2.77.5",
 		"taggedalgebraic": "0.11.3",
-		"unit-threaded": "0.7.55"
+		"unit-threaded": "0.7.55",
+		"vibe-d": "0.8.5",
+		"vibe-sdlang": "1.0.0-alpha.3"
 	}
 }

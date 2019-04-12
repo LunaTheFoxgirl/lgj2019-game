@@ -21,10 +21,10 @@ public:
     }
 
     override void Update(GameTimes gameTime) {
-        gameWorld.Update();
+        gameWorld.Update(gameTime);
     }
 
     override void Draw(SpriteBatch spriteBatch, GameTimes gameTime) {
-        gameWorld.Draw();
+        gameWorld.Draw(gameTime);
     }
 }

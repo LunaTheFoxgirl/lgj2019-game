@@ -1,0 +1,26 @@
+roomTexture "textures/world/floor_wood"
+classname "wall_plaster_b"
+
+width 6
+height 6
+
+hasWalls true
+
+extraWalls {
+    midWall {
+        start x=3 y=0
+        end x=3 y=6
+        classname "wall_plaster_b"
+
+        // Sides are:
+        // 0 - ends are pointing left
+        // 1 - ends are pointing straight
+        // 2 - ends are pointing right
+        // 3 - ends are cubes
+        segmentEnd 3
+    }
+}
+
+floorPlan {
+    door0 x=3 y=3 classname="door"
+}

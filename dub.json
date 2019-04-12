@@ -10,6 +10,7 @@
 	"license": "BSD 2-clause",
 	"dependencies": {
 		"sdlang-d": "~>0.10.5",
+		"vibe-sdlang": "~>1.0.0-alpha.3",
 		"pp": "~>0.0.52"
 	},
 	"preBuildCommands": ["rm -r content/", "ppcc -v"]
