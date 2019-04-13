@@ -1,5 +1,6 @@
 module game.entities.player;
 import game.entity;
+import game.animation;
 import polyplex;
 
 public class Player : Entity {
@@ -7,12 +8,21 @@ private:
     Texture2D texture;
     KeyboardState kstate;
 
+    SpriteFlip flip = SpriteFlip.None;
+    Animation animation;
+
     enum MoveSpeedConst = 1f;
 
 public:
     override void Init() {
         Position = Vector2(0, 0);
         this.texture = AssetCache.Get!Texture2D("textures/entities/player/player");
+        
+        import std.file : readText;
+        animation = new Animation(fromSDL(readText("content/exdata/player_anim.sdl")));
+        
+        animation.ChangeAnimation("idle");
+
         this.DrawArea = new Rectangle(0, 0, 30, 30);
     }
 
@@ -20,29 +30,38 @@ public:
         kstate = Keyboard.GetState();
 
 
+        animation.ChangeAnimation("idle", true);
         if (kstate.IsKeyDown(Keys.W)) {
             Position.Y -= MoveSpeedConst;
+            animation.ChangeAnimation("walk", true);
         }
         
         if (kstate.IsKeyDown(Keys.S)) {
             Position.Y += MoveSpeedConst;
+            animation.ChangeAnimation("walk", true);
         }
 
         if (kstate.IsKeyDown(Keys.A)) {
+            flip = SpriteFlip.None;
             Position.X -= MoveSpeedConst;
+            animation.ChangeAnimation("walk", true);
         }
         
         if (kstate.IsKeyDown(Keys.D)) {
             Position.X += MoveSpeedConst;
+            flip = SpriteFlip.FlipVertical;
+            animation.ChangeAnimation("walk", true);
         }
 
         this.DrawArea.X = cast(int)Position.X;
         this.DrawArea.Y = cast(int)Position.Y;
+
+        animation.Update();
     }
 
     override void Draw(SpriteBatch spriteBatch, GameTimes gameTime) {
         spriteBatch.Draw(this.texture, DrawArea, new Rectangle(
-            0, 0, 32, 32
-        ), 0f, Vector2(16, 16), Color.White);
+            animation.GetAnimationX()*30, animation.GetAnimationY()*30, 30, 30
+        ), 0f, Vector2(15, 15), Color.White, flip);
     }
 }
