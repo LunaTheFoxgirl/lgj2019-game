@@ -21,7 +21,7 @@ public:
     /// Gets a peice of content, if it isn't loaded yet a load will be attempted.
     T Get(T)(string name) if (is(T == class)) {
         if (name in cachedContent) {
-            return cast(T)cachedContent(name);
+            return cast(T)cachedContent[name];
         }
         cachedContent[name] = content.Load!T(name);
         return Get!T(name);

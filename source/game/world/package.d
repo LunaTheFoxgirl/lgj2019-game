@@ -46,6 +46,9 @@ public:
     /// The camera
     static Camera2D Camera;
 
+    /// The rooms in the map
+    Room[] Rooms;
+
     this() {
         import gamemain : GameContext;
 
@@ -58,16 +61,18 @@ public:
         ThePlayer = new Player();
         ThePlayer.Init();
         Camera = new Camera2D(Vector2(0, 0));
+        Camera.Zoom = 2.5f;
         FBOBounds = new Rectangle(0, 0, 0, 0);
+        Rooms ~= [new Room("room0", 0, 0)];
     }
 
     void Update(GameTimes gameTime) {
-        
+
         // Update the player
         ThePlayer.Update(gameTime);
 
         // Update camera position to match player position
-        Camera.Position = ThePlayer.Position;
+        Camera.Position = Vector2(cast(int)ThePlayer.Position.X, cast(int)ThePlayer.Position.Y);
         Camera.Origin = Vector2(Window.ClientBounds.Width/2, Window.ClientBounds.Height/2);
 
 
@@ -79,16 +84,22 @@ public:
     }
 
     void Draw(GameTimes gameTime) {
-        EffectBuffer = new Framebuffer(Window.ClientBounds.Width, Window.ClientBounds.Height);
-        EffectBuffer.Begin();
+        //EffectBuffer = new Framebuffer(Window.ClientBounds.Width, Window.ClientBounds.Height);
+        //EffectBuffer.Begin();
+
+        beginDraw();
+        foreach(room; Rooms) {
+            room.Draw(spriteBatch);
+        }
+        endDraw();
 
         beginDraw();
         ThePlayer.Draw(spriteBatch, gameTime);
         endDraw();
 
-        EffectBuffer.End();
+        //EffectBuffer.End();
 
 
-        drawFBO();
+        //drawFBO();
     }
 }

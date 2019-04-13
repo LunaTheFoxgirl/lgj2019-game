@@ -1,8 +1,8 @@
-roomTexture "textures/world/floor_wood"
+roomTexture "wood"
 classname "wall_plaster_b"
 
-width 6
-height 6
+width 16
+height 16
 
 hasWalls true
 

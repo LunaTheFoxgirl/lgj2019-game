@@ -13,5 +13,5 @@
 		"vibe-sdlang": "~>1.0.0-alpha.3",
 		"pp": "~>0.0.52"
 	},
-	"preBuildCommands": ["rm -r content/", "ppcc -v"]
+	"preGenerateCommands": ["rm -r content/", "ppcc -v", "cp -r raw/exdata content/"]
 }

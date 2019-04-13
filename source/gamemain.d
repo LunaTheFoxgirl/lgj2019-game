@@ -32,13 +32,12 @@ public:
 
         // Initialize GameContext
         GameContext.initContext(this);
+        setupGameCache();
 
         // Start game state managment
         import game.gamestates.mainstate : MainGameState;
         GameStateManager.Push(new MainGameState());
         GameStateManager.Init();
-
-        setupGameCache();
     }
 
     override void UnloadContent() {

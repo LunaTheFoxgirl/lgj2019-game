@@ -11,6 +11,10 @@ public:
         textures[name] = texture;
     }
 
+    bool HasFloor(string name) {
+        return (name in textures) !is null;
+    }
+
     Texture2D Build(string texture, uint areaWidth, uint areaHeight) {
         Color[][] texColorBuffer = textures[texture].Pixels;
 

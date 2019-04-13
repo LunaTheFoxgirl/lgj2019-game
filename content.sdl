@@ -20,11 +20,16 @@ recipe name="SoundEffects" path="sfx/" {
 
 recipe name="Textures" path="textures/" {
     // PLACEHOLDERS
-    texture "placeholders/ph-ground.png"    type="png"          license="WTFPL"
-    texture "placeholders/ph-player.png"    type="png"          license="WTFPL"
+    texture "placeholders/ph-ground.png"                type="png"          license="WTFPL"
+    texture "placeholders/ph-player.png"                type="png"          license="WTFPL"
     
     // Player textures
+    texture "entities/player/player.png"                type="png"      author="Shramper"      license="All Rights Reserved"
 
+    // World textures
+    texture "world/floors/floor_wood.png"               type="png"      author="Shramper"      license="All Rights Reserved"
+    texture "world/walls/wall_plaster_b_mask.png"       type="png"      author="Shramper"      license="All Rights Reserved"
+    texture "world/walls/wall_plaster_b.png"            type="png"      author="Shramper"      license="All Rights Reserved"
 }
 
 recipe name="Data" path="exdata/" {
