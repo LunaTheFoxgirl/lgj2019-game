@@ -24,7 +24,7 @@ public:
         uint floorHeight = height/2;
 
         // Dunno why this has to be there but it works.
-        enum wtfConstant = 8;
+        enum wtfConstant = 7;
 
         uint expectedHeight = (floorHeight*areaHeight)+floorHeight;
         uint expectedHeightHalf = ((floorHeight*areaHeight)+(floorHeight/2))/2;

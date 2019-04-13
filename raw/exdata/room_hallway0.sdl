@@ -1,0 +1,26 @@
+roomTexture "wood_brick"
+classname "brick"
+
+width 12
+height 8
+
+hasWalls true
+
+// extraWalls {
+//     midWall {
+//         start x=3 y=0
+//         end x=3 y=6
+//         classname "brick"
+
+//         // Sides are:
+//         // 0 - ends are pointing left
+//         // 1 - ends are pointing straight
+//         // 2 - ends are pointing right
+//         // 3 - ends are cubes
+//         segmentEnd 3
+//     }
+// }
+
+floorPlan {
+    door0 x=3 y=3 classname="door"
+}

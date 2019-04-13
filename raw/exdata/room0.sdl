@@ -1,16 +1,28 @@
-roomTexture "wood"
-classname "wall_plaster_b"
+roomTexture "wood_brick"
+classname "brick"
 
-width 16
-height 16
+width 20
+height 20
 
 hasWalls true
 
 extraWalls {
     midWall {
-        start x=3 y=0
-        end x=3 y=6
-        classname "wall_plaster_b"
+        start x=10 y=2
+        end x=10 y=18
+        classname "brick"
+
+        // Sides are:
+        // 0 - ends are pointing left
+        // 1 - ends are pointing straight
+        // 2 - ends are pointing right
+        // 3 - ends are cubes
+        segmentEnd 3
+    }
+    midWallB {
+        start x=2 y=10
+        end x=18 y=10
+        classname "brick"
 
         // Sides are:
         // 0 - ends are pointing left

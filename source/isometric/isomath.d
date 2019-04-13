@@ -14,7 +14,7 @@ void setIsometricSize(int width, int height) {
 
 /// Translate a tile X and Y to X and Y coordinates
 Vector2 isoTranslate(Vector2i tilePos, int width = isoWidth, int height = isoHeight) {
-    int fx = (tilePos.X * isoWidth / 2) + (tilePos.Y * width / 2);
+    int fx = (tilePos.X * width / 2) + (tilePos.Y * width / 2);
     int fy = (tilePos.Y * height / 2) - (tilePos.X * height /2);
     return Vector2(fx, fy);
 }

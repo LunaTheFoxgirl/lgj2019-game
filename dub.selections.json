@@ -7,7 +7,7 @@
 		"bindbc-sdl": "0.5.1",
 		"colorize": "1.0.5",
 		"imageformats": "7.0.0",
-		"pp": "0.0.52",
+		"pp": "~master",
 		"ppc": "0.2.2",
 		"sdlang-d": "0.10.5",
 		"sharpevents": "1.0.2",

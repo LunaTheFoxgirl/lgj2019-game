@@ -50,6 +50,7 @@ public:
     }
 
     override void Draw(GameTimes gameTime) {
+        Renderer.ClearDepth();
         Renderer.ClearColor(Color.CornflowerBlue);
         GameStateManager.Draw(sprite_batch, gameTime);
     }

@@ -62,6 +62,6 @@ public:
     override void Draw(SpriteBatch spriteBatch, GameTimes gameTime) {
         spriteBatch.Draw(this.texture, DrawArea, new Rectangle(
             animation.GetAnimationX()*30, animation.GetAnimationY()*30, 30, 30
-        ), 0f, Vector2(15, 15), Color.White, flip);
+        ), 0f, Vector2(15, 15), Color.White, flip, 5f);
     }
 }

@@ -3,6 +3,7 @@ import polyplex;
 import win = polyplex.core.window;
 import game.entities;
 import game.world.room;
+import polyplex.core.render.gl.debug2d;
 
 public class World {
 private:
@@ -15,17 +16,19 @@ private:
     Framebuffer EffectBuffer;
     Shader postProcessing;
     Rectangle FBOBounds;
+    RasterizerState rast;
+    Shader depthTestShader;
     void drawFBO() {
-        spriteBatch.Begin(SpriteSorting.Immediate, Blending.NonPremultiplied, Sampling.PointClamp, RasterizerState.Default, postProcessing, Camera);
+        spriteBatch.Begin(SpriteSorting.Immediate, Blending.NonPremultiplied, Sampling.PointClamp, rast, postProcessing, Camera);
         spriteBatch.Draw(EffectBuffer, FBOBounds, FBOBounds, Color.White);
         spriteBatch.End();
     }
 
-    void beginDraw(bool withCamera = true)() {
+    void beginDraw(bool withCamera = true)(bool useRasterizer = true) {
         static if (withCamera) {
-            spriteBatch.Begin(SpriteSorting.Immediate, Blending.NonPremultiplied, Sampling.PointClamp, RasterizerState.Default, null, Camera);
+            spriteBatch.Begin(SpriteSorting.Immediate, Blending.NonPremultiplied, Sampling.PointClamp, useRasterizer ? rast : RasterizerState.Default, useRasterizer ? depthTestShader : null, Camera);
         } else {
-            spriteBatch.Begin(SpriteSorting.Immediate, Blending.NonPremultiplied, Sampling.PointClamp, RasterizerState.Default, null, null);
+            spriteBatch.Begin(SpriteSorting.Immediate, Blending.NonPremultiplied, Sampling.PointClamp, useRasterizer ? rast : RasterizerState.Default, useRasterizer ? depthTestShader : null, null);
         }
     }
 
@@ -61,9 +64,15 @@ public:
         ThePlayer = new Player();
         ThePlayer.Init();
         Camera = new Camera2D(Vector2(0, 0));
-        Camera.Zoom = 2.5f;
+        Camera.Zoom = 3f;
         FBOBounds = new Rectangle(0, 0, 0, 0);
-        Rooms ~= [new Room("room0", 0, 0)];
+
+        foreach_reverse(y; 0..1) {
+            foreach(x; 0..1) {
+                Rooms ~= new Room(this, "room0", y*8, x*8);
+            }
+        }
+        depthTestShader = Content.Load!Shader("shaders/spr_depth");
     }
 
     void Update(GameTimes gameTime) {
@@ -81,20 +90,34 @@ public:
         FBOBounds.Y = Window.ClientBounds.Y;
         FBOBounds.Width = Window.ClientBounds.Width;
         FBOBounds.Height = Window.ClientBounds.Height;
+
+        rast = RasterizerState.Default();
+        rast.DepthTest = true;
     }
 
     void Draw(GameTimes gameTime) {
         //EffectBuffer = new Framebuffer(Window.ClientBounds.Width, Window.ClientBounds.Height);
         //EffectBuffer.Begin();
+        beginDraw(false);
+            // Draw the floor
+            foreach(room; Rooms) room.Draw(spriteBatch);
+        endDraw();
 
         beginDraw();
         foreach(room; Rooms) {
-            room.Draw(spriteBatch);
+            //room.BackPass(spriteBatch);
         }
+
         endDraw();
 
         beginDraw();
         ThePlayer.Draw(spriteBatch, gameTime);
+        endDraw();
+
+        beginDraw();
+        foreach(room; Rooms) {
+            room.DrawWalls(spriteBatch);
+        }
         endDraw();
 
         //EffectBuffer.End();
