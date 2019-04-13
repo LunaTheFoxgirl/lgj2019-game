@@ -88,7 +88,16 @@ RoomData fromString(string data, string origin = __MODULE__) {
     return deserializeSDLang!RoomData(parseSource(data, origin));
 }
 
-
+import polyplex;
 struct RoomWall {
     string textureName;
+
+    this(string textureName) {
+        this.textureName = textureName;
+        this.selfColor = Color.White;
+        this.colorStep = 1f;
+    }
+
+    Color selfColor;
+    float colorStep;
 }

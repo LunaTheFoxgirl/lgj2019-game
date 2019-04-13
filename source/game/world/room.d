@@ -20,6 +20,10 @@ private:
     __gshared Color normColor;
     __gshared Color intersectColor;
 
+
+    Color selfColor;
+    float colorStep = 1f;
+
 package:
     Rectangle DrawArea;
     Rectangle DrawAreaDownTmp;
@@ -144,6 +148,19 @@ public:
     }
 
     void Draw(SpriteBatch spriteBatch) {
+
+        int segHeight = ((floorTexture.Height/data.height)/2)-4;
+
+        DrawAreaDownTmp.X = DrawArea.X;
+        DrawAreaDownTmp.Y = DrawArea.Y;
+        DrawAreaDownTmp.Width = DrawArea.Width;
+        DrawAreaDownTmp.Height = DrawArea.Height;
+        foreach_reverse(i; 0..40) {
+            DrawAreaDownTmp.Y = DrawArea.Y+(i*segHeight)+segHeight;
+
+            spriteBatch.Draw(this.floorTexture, DrawAreaDownTmp, this.floorTexture.Size, Color.White);
+        }
+
         spriteBatch.Draw(this.floorTexture, DrawArea, this.floorTexture.Size, 0f, Vector2(0, 0), Color.White, SpriteFlip.None);
     }
 
@@ -151,14 +168,14 @@ public:
         foreach(y; 0..walls.length) {
             foreach_reverse(x; 0..walls[y].length) {
                 if (walls[y][x] is null) continue;
-                drawWall(spriteBatch, *walls[y][x], Vector2i(cast(int)y, cast(int)x));
+                drawWall(spriteBatch, walls[y][x], Vector2i(cast(int)y, cast(int)x));
             }
         }
     }
 
     private Rectangle tmpDrawPos = new Rectangle(0, 0, 0, 0);
     private Rectangle tmpDrawFetch = new Rectangle(0, 0, 0, 0);
-    void drawWall(SpriteBatch spriteBatch, RoomWall wall, Vector2i at) {
+    void drawWall(SpriteBatch spriteBatch, RoomWall* wall, Vector2i at) {
         Vector2i pos = calculatePosition(at);
         Rectangle size = wallTextures[wall.textureName].Size();
 
@@ -189,8 +206,14 @@ public:
 
         bool shouldMakeTransparent = layer == 3f && (playerRect.Expand(-(playerRect.Width/4), -(playerRect.Height/4))).Intersects(tmpDrawPos);
 
+        if (shouldMakeTransparent && wall.colorStep > 0f) {
+            wall.colorStep -= 0.025f;
+        } else if (wall.colorStep < 1f) {
+            wall.colorStep += 0.025f;
+        }
+        wall.selfColor.Alpha = cast(int)Mathf.Cosine(150f, 255f, wall.colorStep);
 
-        spriteBatch.Draw(wallTextures[wall.textureName], tmpDrawPos, tmpDrawFetch, 0, Vector2(0, 0), shouldMakeTransparent ? intersectColor : normColor, SpriteFlip.None, layer);
+        spriteBatch.Draw(wallTextures[wall.textureName], tmpDrawPos, tmpDrawFetch, 0, Vector2(0, 0), wall.selfColor, SpriteFlip.None, layer);
         
     }
 
