@@ -2,17 +2,18 @@ module game.world;
 import polyplex;
 import win = polyplex.core.window;
 import game.entities;
-import game.world.room;
+//import game.world.room;
+import game.world.floor;
 import polyplex.core.render.gl.debug2d;
 
 public class World {
 private:
     SpriteBatch spriteBatch;
 
+    // Music
+    Music track0;
 
-
-
-
+    // Rendering stuff
     Framebuffer EffectBuffer;
     Shader postProcessing;
     Rectangle FBOBounds;
@@ -49,8 +50,7 @@ public:
     /// The camera
     static Camera2D Camera;
 
-    /// The rooms in the map
-    Room[] Rooms;
+    FloorManager Floor;
 
     this() {
         import gamemain : GameContext;
@@ -66,13 +66,18 @@ public:
         Camera = new Camera2D(Vector2(0, 0));
         Camera.Zoom = 3f;
         FBOBounds = new Rectangle(0, 0, 0, 0);
-
-        foreach_reverse(y; 0..1) {
-            foreach(x; 0..1) {
-                Rooms ~= new Room(this, "room0", y*8, x*8);
-            }
-        }
         depthTestShader = Content.Load!Shader("shaders/spr_depth");
+
+        Floor = new FloorManager();
+
+        /*foreach_reverse(y; 0..1) {
+            foreach(x; 0..1) {
+                Rooms ~= new Room(this, "room0", y*20, x*20);
+            }
+        }*/
+
+        // track0 = Content.Load!Music("music/02");
+        // track0.Play(true);
     }
 
     void Update(GameTimes gameTime) {
@@ -81,7 +86,7 @@ public:
         ThePlayer.Update(gameTime);
 
         // Update camera position to match player position
-        Camera.Position = Vector2(cast(int)ThePlayer.Position.X, cast(int)ThePlayer.Position.Y);
+        Camera.Position =ThePlayer.DrawArea.Center; // Vector2(cast(int).X, cast(int)ThePlayer.Position.Y);
         Camera.Origin = Vector2(Window.ClientBounds.Width/2, Window.ClientBounds.Height/2);
 
 
@@ -100,14 +105,8 @@ public:
         //EffectBuffer.Begin();
         beginDraw(false);
             // Draw the floor
-            foreach(room; Rooms) room.Draw(spriteBatch);
-        endDraw();
-
-        beginDraw();
-        foreach(room; Rooms) {
-            //room.BackPass(spriteBatch);
-        }
-
+            //foreach(room; Rooms) room.Draw(spriteBatch);
+            Floor.Draw(spriteBatch);
         endDraw();
 
         beginDraw();
@@ -115,9 +114,9 @@ public:
         endDraw();
 
         beginDraw();
-        foreach(room; Rooms) {
+        /*foreach(room; Rooms) {
             room.DrawWalls(spriteBatch);
-        }
+        }*/
         endDraw();
 
         //EffectBuffer.End();

@@ -29,9 +29,12 @@ recipe name="Textures" path="textures/" {
     // World textures
     texture "world/floors/floor_wood.png"               type="png"      author="Shramper"      license="All Rights Reserved"
     texture "world/floors/floor_wood_brick.png"         type="png"      author="Shramper"      license="All Rights Reserved"
-    texture "world/walls/wall_brick.png"                type="png"      author="Shramper"      license="All Rights Reserved"
-    texture "world/walls/wall_plaster_b_mask.png"       type="png"      author="Shramper"      license="All Rights Reserved"
-    texture "world/walls/wall_plaster_b.png"            type="png"      author="Shramper"      license="All Rights Reserved"
+    texture "world/walls/walls_brick.png"               type="png"      author="Shramper"      license="All Rights Reserved"
+    texture "world/walls/walls_plaster_b.png"           type="png"      author="Shramper"      license="All Rights Reserved"
+    texture "world/walls/walls_plaster_w.png"           type="png"      author="Shramper"      license="All Rights Reserved"
+
+    // Base collission mask
+    texture "world/walls_mask.png"                      type="png"
 }
 
 recipe name="Data" path="exdata/" {

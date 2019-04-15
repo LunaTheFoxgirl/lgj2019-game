@@ -2,6 +2,7 @@ module gamemain;
 import polyplex;
 import game.gamestate;
 import game.content;
+import game.data;
 
 public class GameMain : Game {
 private:
@@ -33,11 +34,11 @@ public:
         // Initialize GameContext
         GameContext.initContext(this);
         setupGameCache();
+        initializeSDLLoader();
 
         // Start game state managment
         import game.gamestates.mainstate : MainGameState;
         GameStateManager.Push(new MainGameState());
-        GameStateManager.Init();
     }
 
     override void UnloadContent() {

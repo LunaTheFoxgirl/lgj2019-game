@@ -5,6 +5,7 @@ import gamemain;
 void main() {
     LogLevel |= LogType.Info;
     LogLevel |= LogType.Debug;
+    LogLevel |= LogType.VerboseDebug;
     
     // Run the game
     GameMain game = new GameMain();

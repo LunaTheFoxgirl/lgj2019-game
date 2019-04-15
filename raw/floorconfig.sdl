@@ -1,0 +1,20 @@
+/// Floor configuration file
+/// Modify this file first when modding the game
+
+floors {
+    0 {
+        background "city_day"
+
+        // Size (in tiles)
+        size width=100 height=100
+
+        // What rooms may spawn on this floor
+        rooms "cafeteria0" "cafeteria2" "cafeteria3" "cubicles0"
+        
+        // What entities are allowed to spawn
+        entities "worker_male" "worker_female"
+        
+        // What items are possible to appear in the shop
+        shop:items "speedboost_0" "attackpower_0" "defense_0"
+    }
+}

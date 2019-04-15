@@ -1,0 +1,35 @@
+roomTexture "wood_brick"
+classname "brick"
+
+width 20
+height 20
+
+hasWalls true
+
+walls {
+    mini_office_a {
+        start x=10 y=1
+        end x=10 y=9
+        classname "plaster_w"
+    }
+    mini_office_b {
+        start x=10 y=10
+        end x=19 y=10
+        classname "plaster_w"
+    }
+    mini_office_c {
+        start x=19 y=1
+        end x=19 y=10
+        classname "plaster_w"
+    }
+}
+
+connections {
+    // This connection is facing right and is at 20, 10
+    connection x=20 y=10 direction="right"
+    connection x=1 y=10 direction="left"
+}
+
+floorPlan {
+    door0 x=3 y=3 classname="door"
+}

@@ -9,6 +9,6 @@ out vec4 outColor;
 
 void main(void) {
 	vec4 tex_col = texture2D(ppTexture, exTexcoord);
-    if (tex_col.a < 0.8) discard;
+    if (tex_col.a < 0.1) discard;
 	outColor = exColor * tex_col;
 }

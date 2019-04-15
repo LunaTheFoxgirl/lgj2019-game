@@ -1,5 +1,5 @@
 module game.data.floordata;
-import vibe.data.serialization : optional;
+public import game.data;
 
 
 deprecated("Don't use this kthxbye")
@@ -49,7 +49,11 @@ struct ExWall {
 
     /// The texture of the wall
     @optional
-    string classname;
+    string classname = "parent";
+
+    /// The variant of the wall texture to use.
+    @optional
+    string variant = "default";
 }
 
 struct RoomData {
@@ -77,27 +81,60 @@ struct RoomData {
     //int[][] floorPlan;
     FloorItem[] floorPlan;
 
+    Connection[] connections;
+
     /// Extra walls
     @optional
     ExWall[] extraWalls;
 }
 
-RoomData fromString(string data, string origin = __MODULE__) {
-    import sdlang.parser : parseSource;
-    import vibe.data.sdl : deserializeSDLang;
-    return deserializeSDLang!RoomData(parseSource(data, origin));
+enum ConnectionDirection : string {
+    Left = "left",
+    Right = "right",
+    Up = "up",
+    Down = "down"
+}
+
+/// A connection point for a wall
+struct Connection {
+    /// X coordinate for the connection
+    int x;
+
+    /// Y Coordinate for the connection
+    int y;
+
+    /// Direction for the connection
+    ConnectionDirection direction;
 }
 
 import polyplex;
-struct RoomWall {
+struct WallData {
+    /*
+        Essential
+    */
+    /// Name of the texture resource associated with this wall
     string textureName;
 
-    this(string textureName) {
+    /// The variant of the texture associated with this wall
+    string variant;
+
+
+    /*
+        Cosmetic
+    */
+
+    /// The color used for this wall segment
+    Color selfColor;
+
+    /// The step the color is at transparency wise
+    float colorStep;
+
+
+    /// The constructor (duh!)
+    this(string textureName, string variant = "default") {
         this.textureName = textureName;
+        this.variant = variant;
         this.selfColor = Color.White;
         this.colorStep = 1f;
     }
-
-    Color selfColor;
-    float colorStep;
 }

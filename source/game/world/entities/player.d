@@ -19,7 +19,7 @@ public:
         this.texture = AssetCache.Get!Texture2D("textures/entities/player/player");
         
         import std.file : readText;
-        animation = new Animation(fromSDL(readText("content/exdata/player_anim.sdl")));
+        animation = new Animation(fromSDL(readText("content/anim/anim_player.sdl")));
         
         animation.ChangeAnimation("idle");
 
@@ -31,13 +31,14 @@ public:
 
 
         animation.ChangeAnimation("idle", true);
+        float diagSpeed = kstate.IsKeyDown(Keys.A) || kstate.IsKeyDown(Keys.D) ? 2 : 1;
         if (kstate.IsKeyDown(Keys.W)) {
-            Position.Y -= MoveSpeedConst;
+            Position.Y -= MoveSpeedConst/diagSpeed;
             animation.ChangeAnimation("walk", true);
         }
         
         if (kstate.IsKeyDown(Keys.S)) {
-            Position.Y += MoveSpeedConst;
+            Position.Y += MoveSpeedConst/diagSpeed;
             animation.ChangeAnimation("walk", true);
         }
 

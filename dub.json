@@ -13,5 +13,12 @@
 		"vibe-sdlang": "~>1.0.0-alpha.3",
 		"pp": "~master"
 	},
-	"preGenerateCommands": ["rm -r content/", "ppcc -v", "cp -r raw/exdata content/"]
+	"preGenerateCommands": [
+		"rm -r content/", 
+		"ppcc -v", 
+		
+		"cp -r raw/exdata content/",
+		"cp -r raw/rooms content/",
+		"cp -r raw/anim content/",
+		"cp raw/floorconfig.sdl content/"]
 }
