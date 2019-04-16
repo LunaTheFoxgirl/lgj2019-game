@@ -105,14 +105,21 @@ struct Connection {
     /// Direction for the connection
     ConnectionDirection direction;
 
+    @optional
+    bool connected = false;
+
+    void connect() {
+        connected = true;
+    }
+
     Point toConnectionPoint(Point roomSize) {
         switch(direction) {
             case ConnectionDirection.Left:
-                return Point(-1, y);
+                return Point(0, y);
             case ConnectionDirection.Right:
                 return Point(roomSize.x, y);
             case ConnectionDirection.Up:
-                return Point(x, -1);
+                return Point(x, 0);
             case ConnectionDirection.Down:
                 return Point(x, roomSize.y);
             default: assert(0);

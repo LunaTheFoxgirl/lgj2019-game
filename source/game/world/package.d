@@ -64,20 +64,13 @@ public:
         ThePlayer = new Player(this);
         ThePlayer.Init();
         Camera = new Camera2D(Vector2(0, 0), -5f, 0f, 3f, 0f, 1f);
-        Camera.Zoom = 3f;
+        Camera.Zoom = .5f; //3f;
         FBOBounds = new Rectangle(0, 0, 0, 0);
         depthTestShader = Content.Load!Shader("shaders/spr_depth");
 
         Floor = new FloorManager(this);
 
         Floor.Generate();
-
-        /*foreach_reverse(y; 0..1) {
-            foreach(x; 0..1) {
-                Rooms ~= new Room(this, "room0", y*20, x*20);
-            }
-        }*/
-
         // track0 = Content.Load!Music("music/02");
         // track0.Play(true);
     }

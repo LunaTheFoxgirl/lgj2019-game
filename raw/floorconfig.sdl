@@ -12,7 +12,7 @@ floors {
         rooms {
             start "room0"
             end "room0"
-            rooms "room0"
+            rooms "room1" "room0"
         }
         // What entities are allowed to spawn
         entities "worker_male" "worker_female"

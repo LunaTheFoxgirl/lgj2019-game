@@ -7,6 +7,8 @@ void main() {
     LogLevel |= LogType.Debug;
     LogLevel |= LogType.VerboseDebug;
     
+    Logger.Info("Trans Rights!");
+
     // Run the game
     GameMain game = new GameMain();
     game.Run();

@@ -8,6 +8,7 @@ public class Player : Entity {
 private:
     Texture2D texture;
     KeyboardState kstate;
+    KeyboardState lkstate;
 
     SpriteFlip flip = SpriteFlip.None;
     Animation animation;
@@ -30,6 +31,7 @@ public:
         animation.ChangeAnimation("idle");
 
         this.DrawArea = new Rectangle(0, 0, 30, 30);
+        lkstate = Keyboard.GetState();
     }
 
     override void Update(GameTimes gameTime) {
@@ -60,11 +62,16 @@ public:
             flip = SpriteFlip.FlipVertical;
             animation.ChangeAnimation("walk", true);
         }
+        if (!lkstate.IsKeyDown(Keys.R) && kstate.IsKeyDown(Keys.R)) {
+            parent.Floor.Clear();
+            parent.Floor.Generate();
+        }
 
         this.DrawArea.X = cast(int)Position.X-(this.DrawArea.Width/2);
         this.DrawArea.Y = cast(int)Position.Y-this.DrawArea.Height;
 
         animation.Update(running ? cast(int)(cast(float)animation.GetAnimationTimeout()/RunMultConst) : 0);
+        lkstate = kstate;
     }
 
     override void Draw(SpriteBatch spriteBatch, GameTimes gameTime) {
