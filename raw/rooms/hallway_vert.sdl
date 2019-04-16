@@ -1,0 +1,18 @@
+id "hallway_vert"
+room_texture "floor_wood_brick"
+classname "plaster_b"
+
+width 5
+height 10
+
+walls {
+}
+
+connections {
+    connection x=2 y=9  direction="bottom"
+    connection x=2 y=0  direction="top"
+}
+
+floorplan {
+    door0 x=3 y=3 classname="door"
+}

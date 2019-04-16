@@ -158,15 +158,15 @@ public:
     void DrawFloor(SpriteBatch spriteBatch) {
         int segHeight = ((floorTexture.Height/schematic.height)/2)-4;
 
-        // drawAreaTmp.X = DrawArea.X;
-        // drawAreaTmp.Y = DrawArea.Y;
-        // drawAreaTmp.Width = DrawArea.Width;
-        // drawAreaTmp.Height = DrawArea.Height;
-        // foreach_reverse(i; 0..40) {
-        //     drawAreaTmp.Y = DrawArea.Y+(i*segHeight)+segHeight;
+        drawAreaTmp.X = DrawArea.X;
+        drawAreaTmp.Y = DrawArea.Y;
+        drawAreaTmp.Width = DrawArea.Width;
+        drawAreaTmp.Height = DrawArea.Height;
+        foreach_reverse(i; 0..40) {
+            drawAreaTmp.Y = DrawArea.Y+(i*segHeight)+segHeight;
 
-        //     spriteBatch.Draw(this.floorTexture, drawAreaTmp, this.floorTexture.Size, Color.White);
-        // }
+            spriteBatch.Draw(this.floorTexture, drawAreaTmp, this.floorTexture.Size, Color.White);
+        }
 
         spriteBatch.Draw(this.floorTexture, DrawArea, this.floorTexture.Size, 0f, Vector2(0, 0), Color.White, SpriteFlip.None);
     

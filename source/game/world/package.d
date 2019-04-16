@@ -64,7 +64,7 @@ public:
         ThePlayer = new Player(this);
         ThePlayer.Init();
         Camera = new Camera2D(Vector2(0, 0), -5f, 0f, 3f, 0f, 1f);
-        Camera.Zoom = .5f; //3f;
+        Camera.Zoom = 2.8f;
         FBOBounds = new Rectangle(0, 0, 0, 0);
         depthTestShader = Content.Load!Shader("shaders/spr_depth");
 

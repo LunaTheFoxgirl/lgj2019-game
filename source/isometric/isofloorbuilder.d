@@ -18,17 +18,16 @@ public:
     Texture2D Build(string texture, uint areaWidth, uint areaHeight) {
         Color[][] texColorBuffer = textures[texture].Pixels;
 
-        // TODO: Make all of this code NOT UGLY.
         uint width = textures[texture].Width;
         uint height = textures[texture].Height;
-        uint floorHeight = height/2;
+        uint tileHeight = height/2;
 
-        // Dunno why this has to be there but it works.
-        enum wtfConstant = 7;
 
-        uint expectedHeight = (floorHeight*areaHeight)+floorHeight;
-        uint expectedHeightHalf = ((floorHeight*areaHeight)+(floorHeight/2))/2;
+        uint expectedTilesHeight = (tileHeight*areaHeight);
+        uint expectedHeight = (height*areaHeight)+height;
         uint expectedWidth = width*areaWidth;
+
+        Logger.Info("{2}={0}, {1}", expectedWidth, expectedHeight, texture);
 
         Color[][] outBuffer = Texture2DEffectors.NewCanvas(expectedWidth, expectedHeight, Color.Transparent);
 
@@ -36,11 +35,8 @@ public:
         foreach(y; 0..areaHeight) {
             foreach_reverse(x; 0..areaWidth) {
                 int fx = (x * width / 2) + (y * width / 2);
-
-                int fh = expectedHeightHalf-wtfConstant;
-                int fy = fh+((y * floorHeight / 2) - (x * floorHeight / 2));
-
-                fastSuperimpose(texColorBuffer, outBuffer, fx, fy-(floorHeight/2));
+                int fy = ((y * (height/2) / 2) - (x * (height/2) / 2));
+                fastSuperimpose(texColorBuffer, outBuffer, fx, fy+expectedTilesHeight);
             }
         }
 

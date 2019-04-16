@@ -10,10 +10,17 @@ walls {
 
 connections {
     // This connection is facing right and is at 20, 10
-    connection x=19 y=9  direction="right"
-    connection x=0  y=9  direction="left"
-    connection x=9  y=19 direction="down"
-    connection x=9  y=0  direction="up"
+    connection x=19 y=4  direction="right"
+    connection x=19 y=14  direction="right"
+
+    connection x=0  y=4  direction="left"
+    connection x=0  y=14  direction="left"
+    
+    connection x=4   y=19 direction="down"
+    connection x=14  y=19 direction="down"
+
+    connection x=4  y=0  direction="up"
+    connection x=14  y=0  direction="up"
 }
 
 entities {

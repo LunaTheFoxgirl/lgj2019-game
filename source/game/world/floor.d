@@ -199,7 +199,6 @@ private:
 
                 
                 if (intersectsRoom(area)) {
-                    Logger.Info("Intersection with area, skipping...");
                     failedOrientation++;
                     continue;
                 }
