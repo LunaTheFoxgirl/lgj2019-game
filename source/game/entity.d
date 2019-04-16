@@ -1,5 +1,6 @@
 module game.entity;
 import polyplex;
+import game.world;
 
 public import game.content;
 
@@ -8,6 +9,8 @@ public:
 
 abstract class Entity {
 public:
+    World parent;
+
     /// The position of the entity
     Vector2 Position;
 

@@ -61,14 +61,16 @@ public:
     }
 
     void Init() {
-        ThePlayer = new Player();
+        ThePlayer = new Player(this);
         ThePlayer.Init();
-        Camera = new Camera2D(Vector2(0, 0));
+        Camera = new Camera2D(Vector2(0, 0), -5f, 0f, 3f, 0f, 1f);
         Camera.Zoom = 3f;
         FBOBounds = new Rectangle(0, 0, 0, 0);
         depthTestShader = Content.Load!Shader("shaders/spr_depth");
 
-        Floor = new FloorManager();
+        Floor = new FloorManager(this);
+
+        Floor.Generate();
 
         /*foreach_reverse(y; 0..1) {
             foreach(x; 0..1) {
@@ -86,7 +88,7 @@ public:
         ThePlayer.Update(gameTime);
 
         // Update camera position to match player position
-        Camera.Position =ThePlayer.DrawArea.Center; // Vector2(cast(int).X, cast(int)ThePlayer.Position.Y);
+        Camera.Position = Vector2(ThePlayer.Position.X, ThePlayer.Position.Y-(ThePlayer.DrawArea.Height/2));
         Camera.Origin = Vector2(Window.ClientBounds.Width/2, Window.ClientBounds.Height/2);
 
 
@@ -106,7 +108,7 @@ public:
         beginDraw(false);
             // Draw the floor
             //foreach(room; Rooms) room.Draw(spriteBatch);
-            Floor.Draw(spriteBatch);
+            Floor.DrawFloor(spriteBatch);
         endDraw();
 
         beginDraw();
@@ -117,6 +119,7 @@ public:
         /*foreach(room; Rooms) {
             room.DrawWalls(spriteBatch);
         }*/
+        Floor.Draw(spriteBatch);
         endDraw();
 
         //EffectBuffer.End();

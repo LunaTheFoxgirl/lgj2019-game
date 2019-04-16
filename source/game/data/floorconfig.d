@@ -10,6 +10,23 @@ struct Size {
     int height;
 }
 
+struct Shop {
+    string[] items;
+
+    @optional
+    Dialogue[] dialogue;
+}
+
+struct Dialogue {
+    string actor;
+    string says;
+}
+
+struct DialogueEvent {
+    string type;
+    Dialogue[] dialogue;
+}
+
 /// Floor data
 struct FloorData {
 
@@ -26,13 +43,16 @@ struct FloorData {
     string[] entities;
 
     /// The items available in the shop
-    @name("shop:items")
-    string[] shopItems;
+    @optional
+    Shop shop;
+
+    @optional
+    DialogueEvent[] dialogs;
 }
 
 /// The floor config root node
 struct FloorConfig {
 
     /// The floors of this config
-    FloorData floors;
+    FloorData[] floors;
 }

@@ -6,7 +6,7 @@ floors {
         background "city_day"
 
         // Size (in tiles)
-        size width=100 height=100
+        size width=50 height=50
 
         // What rooms may spawn on this floor
         rooms "cafeteria0" "cafeteria2" "cafeteria3" "cubicles0"
@@ -15,6 +15,28 @@ floors {
         entities "worker_male" "worker_female"
         
         // What items are possible to appear in the shop
-        shop:items "speedboost_0" "attackpower_0" "defense_0"
+        shop { 
+            items "speedboost_0" "attackpower_0" "defense_0"
+            dialogue {
+                dialogue actor="player"   says="Uhhh, who are you?"
+                dialogue actor="shopkeep" says="Hi! I'm your local elevator shopkeeper."
+                dialogue actor="player"   says="I better not question it..."
+            }
+        }
+
+        // Dialogue for events
+        dialogs {
+            event type="roomStart" {
+                dialogue {
+                    dialogue actor="player"   says="That's it, i'm done with this job!"
+                }
+            }
+
+            event type="firstHit" {
+                dialogue {
+                    dialogue actor="player"   says="oof"
+                }
+            }
+        }
     }
 }

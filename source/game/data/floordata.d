@@ -40,7 +40,7 @@ struct Point {
     int y;
 }
 
-struct ExWall {
+struct WallDefinition {
     /// Where the wall starts
     Point start;
 
@@ -59,9 +59,11 @@ struct ExWall {
 struct RoomData {
     /// Name of the room (for caching purposes)
     @optional
-    string name;
+    @name("id")
+    string name_;
 
     /// The name of the texture to use for the room
+    @name("room_texture")
     string roomTexture;
 
     /// The classname of the walls (what texture they should use)
@@ -73,19 +75,16 @@ struct RoomData {
     /// Height of room (in tiles)
     int height;
 
-    /// Wether the room has walls
-    @optional
-    bool hasWalls = true;
-
     /// The floor plan (what stuff to place where)
     //int[][] floorPlan;
-    FloorItem[] floorPlan;
+    FloorItem[] floorplan;
 
+    /// All the connection points for the floor
     Connection[] connections;
 
     /// Extra walls
     @optional
-    ExWall[] extraWalls;
+    WallDefinition[] walls;
 }
 
 enum ConnectionDirection : string {
@@ -105,36 +104,4 @@ struct Connection {
 
     /// Direction for the connection
     ConnectionDirection direction;
-}
-
-import polyplex;
-struct WallData {
-    /*
-        Essential
-    */
-    /// Name of the texture resource associated with this wall
-    string textureName;
-
-    /// The variant of the texture associated with this wall
-    string variant;
-
-
-    /*
-        Cosmetic
-    */
-
-    /// The color used for this wall segment
-    Color selfColor;
-
-    /// The step the color is at transparency wise
-    float colorStep;
-
-
-    /// The constructor (duh!)
-    this(string textureName, string variant = "default") {
-        this.textureName = textureName;
-        this.variant = variant;
-        this.selfColor = Color.White;
-        this.colorStep = 1f;
-    }
 }

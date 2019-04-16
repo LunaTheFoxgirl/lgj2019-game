@@ -1,25 +1,32 @@
-"idle" {
-    frame frame=0 animation=0 timeout=5
-}
+// Width and height of each frame (in pixels)
+width 30
+height 30
 
-"walk" {
-    frame frame=0 animation=1 timeout=8
-    frame frame=1 animation=1 timeout=8
-    frame frame=2 animation=1 timeout=8
-    frame frame=3 animation=1 timeout=8
-    frame frame=4 animation=1 timeout=8
-    frame frame=5 animation=1 timeout=8
-}
+/// All of the animations
+animations {
+    "idle" {
+        frame frame=0 animation=0 timeout=5
+    }
 
-"idle_hold" {
-    frame frame=0 animation=2 timeout=5
-}
+    "walk" {
+        frame frame=0 animation=1 timeout=8
+        frame frame=1 animation=1 timeout=8
+        frame frame=2 animation=1 timeout=8
+        frame frame=3 animation=1 timeout=8
+        frame frame=4 animation=1 timeout=8
+        frame frame=5 animation=1 timeout=8
+    }
 
-"walk_hold" {
-    frame frame=0 animation=3 timeout=8
-    frame frame=1 animation=3 timeout=8
-    frame frame=2 animation=3 timeout=8
-    frame frame=3 animation=3 timeout=8
-    frame frame=4 animation=3 timeout=8
-    frame frame=5 animation=3 timeout=8
+    "idle_hold" {
+        frame frame=0 animation=2 timeout=5
+    }
+
+    "walk_hold" {
+        frame frame=0 animation=3 timeout=8
+        frame frame=1 animation=3 timeout=8
+        frame frame=2 animation=3 timeout=8
+        frame frame=3 animation=3 timeout=8
+        frame frame=4 animation=3 timeout=8
+        frame frame=5 animation=3 timeout=8
+    }
 }
