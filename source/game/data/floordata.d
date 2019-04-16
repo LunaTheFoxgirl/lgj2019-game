@@ -104,4 +104,18 @@ struct Connection {
 
     /// Direction for the connection
     ConnectionDirection direction;
+
+    Point toConnectionPoint(Point roomSize) {
+        switch(direction) {
+            case ConnectionDirection.Left:
+                return Point(-1, y);
+            case ConnectionDirection.Right:
+                return Point(roomSize.x, y);
+            case ConnectionDirection.Up:
+                return Point(x, -1);
+            case ConnectionDirection.Down:
+                return Point(x, roomSize.y);
+            default: assert(0);
+        }
+    }
 }

@@ -27,6 +27,12 @@ struct DialogueEvent {
     Dialogue[] dialogue;
 }
 
+struct RoomConfig {
+    string start;
+    string end;
+    string[] rooms;
+}
+
 /// Floor data
 struct FloorData {
 
@@ -35,9 +41,9 @@ struct FloorData {
 
     /// The size (in tiles) of the floor
     Size size;
-
+    
     /// The available rooms
-    string[] rooms;
+    RoomConfig rooms;
 
     /// The entities in the game
     string[] entities;

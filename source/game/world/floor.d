@@ -4,6 +4,7 @@ import game.data.floordata;
 import game.data.floorconfig;
 import polyplex;
 import game.world;
+import polyplex.utils.random;
 
 /// Get the offset for a wall segment
 Vector2i getWallOffset(Vector2i position, Vector2i size) {
@@ -25,49 +26,71 @@ private:
     size_t currentLevel = 0;
     World parent;
 
+    __gshared Random random;
+
+    bool isRoomCorrectSide(ConnectionDirection room, ConnectionDirection against) {
+        switch(room) {
+            case ConnectionDirection.Left:
+                return against == ConnectionDirection.Right;
+            case ConnectionDirection.Right:
+                return against == ConnectionDirection.Left;
+            case ConnectionDirection.Up:
+                return against == ConnectionDirection.Down;
+            case ConnectionDirection.Down:
+                return against == ConnectionDirection.Up;
+            default: assert(0);
+        }
+    }
+
+    bool canRoomConnect(RoomData room, RoomData data) {
+        foreach(conn; room.connections) {
+            foreach(connA; data.connections) {
+                if (isRoomCorrectSide(conn.direction, connA.direction)) return true;
+            }
+        }
+        return false;
+    }
+
+    Rectangle calculateRoomPosition(Room from, RoomData to) {
+        
+    }
+
+    RoomData getRoomData(string nameof) {
+        import std.format : format;
+        return fromResource!RoomData("rooms/%s".format(nameof));
+    }
+
+    void setRoom(RoomData data, Vector2i at) {
+        Room room = new Room(currentFloor, data);
+        room.Generate(Vector2i(at.X, at.Y));
+        Logger.Info("Placed {0} at <{1},{2}> uwu", data.name_, at.X, at.Y);
+        currentFloor.rooms ~= room;
+    }
+
     void generateLevelGeometry(FloorData floor) {
         Logger.Info("Generating level geometry...");
         currentFloor = new Floor(parent, floor.size.width, floor.size.height, 60, 60);
-
-        RoomData data = fromResource!RoomData("rooms/room0");
-
-        ptrdiff_t x = 0;
-        ptrdiff_t y = floor.size.height;
-        while(y > 0) {
-            if (y < 0) break;
-
-            while(x < floor.size.width) {
-                if (x > floor.size.width) break;
-
-                Room room = new Room(currentFloor, data);
-                room.walls = new Wall[][](data.width, data.height);
-
-                room.Generate(Vector2i(cast(int)x, cast(int)y));
-                Logger.Info("placed {0} at {1},{2}", data.name_, x, y);
-                currentFloor.rooms ~= room;
-                x += data.width;
-            }
-            y -= data.height;
-            x = 0;
-        }
-        
-        /*foreach(x; 0..room.walls.length) {
-            foreach(y; 0..room.walls[x].length) {
-
-                Rectangle pos = new Rectangle();
-                Vector2i posx = calculatePosition(Vector2i(cast(int)x, cast(int)y), Vector2i(60, 60));
-                pos.X = posx.X;
-                pos.Y = posx.Y+((floor.size.height/2)*60);
-                pos.Width = 60;
-                pos.Height = 60;
-
-                room.walls[x][y] = new Wall(room, pos, data.classname);
-            }
-        }*/
-
-
         referenceHeight = currentFloor.referenceHeight;
 
+        // Set initial starting room.
+        setRoom(getRoomData(floor.rooms.start), Vector2i(0, 0));
+
+        size_t placementAttempts = 0;
+        enum placementThreshold = 50;
+        size_t maxRoomCount = ((floor.size.width+floor.size.height)/2)/10;
+
+        while (placementAttempts < placementThreshold) {
+            // Get a random room from the room pool
+            RoomData data = getRoomData(floor.rooms.rooms[random.Next(0, floor.rooms.rooms.length-1)]);
+            Room last = currentFloor.rooms[$-1];
+
+            // If it can't connect retry.
+            if (!canRoomConnect(last.schematic, data)) {
+                placementAttempts++;
+                continue;
+            }
+            break;
+        }
         Logger.Info("Geometry generated!");
     }
 
@@ -89,6 +112,7 @@ public:
         config = fromResource!FloorConfig("floorconfig");
         Logger.Debug("{0}", config);
         this.parent = parent;
+        if (random is null) random = new Random();
     }
 
     void Generate(size_t levelId = 0) {

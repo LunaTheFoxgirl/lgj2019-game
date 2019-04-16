@@ -33,7 +33,6 @@ private:
     Vector2i position;
     Floor parent;
     Texture2D floorTexture;
-    RoomData schematic;
 
     void placeWallSegment(Vector2i position, Vector2i gridPosition, string classname) {
 
@@ -79,9 +78,11 @@ private:
 public:
     Wall[][] walls;
     Rectangle Area;
+    RoomData schematic;
 
     /// Generate the content of the room
     void Generate(Vector2i position) {
+        walls = new Wall[][](schematic.width, schematic.height);
         this.position = position;
 
         if (!ROOM_CACHE.Has(schematic.name_)) {
@@ -100,6 +101,8 @@ public:
         // Apply all that fancy stuff
         DrawArea = new Rectangle(cast(int)isoSize.X, cast(int)isoSize.Y, this.floorTexture.Width, this.floorTexture.Height);
         
+        Area = new Rectangle(position.X, position.Y, schematic.width, schematic.height);
+
         // Generate outer walls
         foreach(x; 0..walls.length) {
             foreach(y; 0..walls[x].length) {
@@ -225,8 +228,6 @@ public:
             colorStep += 0.025f;
         }
         selfColor.Alpha = cast(int)Mathf.Cosine(128f, 255f, colorStep);
-        
-
         spriteBatch.Draw(texture, DrawArea, new Rectangle(0, 0, 60, 60), 0, Vector2(0, 0), selfColor, SpriteFlip.None, layer);
     }
 }

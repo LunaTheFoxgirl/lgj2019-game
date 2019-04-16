@@ -9,8 +9,11 @@ floors {
         size width=50 height=50
 
         // What rooms may spawn on this floor
-        rooms "cafeteria0" "cafeteria2" "cafeteria3" "cubicles0"
-        
+        rooms {
+            start "room0"
+            end "room0"
+            rooms "room0"
+        }
         // What entities are allowed to spawn
         entities "worker_male" "worker_female"
         
