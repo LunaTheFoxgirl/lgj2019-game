@@ -11,7 +11,7 @@ floors {
         // What rooms may spawn on this floor
         rooms {
             start "room0"
-            end "room0"
+            end "elevator"
             rooms "room1" "room0" "hallway_horz" "hallway_vert"
         }
         // What entities are allowed to spawn

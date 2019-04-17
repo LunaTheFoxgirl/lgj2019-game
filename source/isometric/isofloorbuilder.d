@@ -14,7 +14,6 @@ public:
     bool HasFloor(string name) {
         return (name in textures) !is null;
     }
-
     Texture2D Build(string texture, uint areaWidth, uint areaHeight) {
         Color[][] texColorBuffer = textures[texture].Pixels;
 
@@ -22,15 +21,16 @@ public:
         uint height = textures[texture].Height;
         uint tileHeight = height/2;
 
+        uint expectedWidth = (areaWidth * width / 2) + (areaHeight * width / 2);
+        uint expectedHeight = height+(height*areaHeight)*2;
 
-        uint expectedTilesHeight = (tileHeight*areaHeight);
-        uint expectedHeight = (height*areaHeight)+height;
-        uint expectedWidth = width*areaWidth;
 
-        Logger.Info("{2}={0}, {1}", expectedWidth, expectedHeight, texture);
+        uint expectedTilesHeight = (tileHeight*areaHeight)*2;
+        //uint expectedWidth = width+(areaWidth*width);
 
+
+        Logger.Info("{0} {1}", expectedWidth, expectedHeight);
         Color[][] outBuffer = Texture2DEffectors.NewCanvas(expectedWidth, expectedHeight, Color.Transparent);
-
 
         foreach(y; 0..areaHeight) {
             foreach_reverse(x; 0..areaWidth) {
@@ -44,8 +44,15 @@ public:
         return new GlTexture2D(outBuffer);
     }
 }
-
 private:
+
+import polyplex.utils.random;
+__gshared Random r;
+
+shared static this() {
+    if (r is null) r = new Random();
+}
+
 // Slightly faster superimpose function that uses the already declared output (to)
 // Saves a little bit of memory allocation
 // Could be optimized further
@@ -56,11 +63,11 @@ Color[][] fastSuperimpose(Color[][] from, ref Color[][] to, int x, int y) {
     int from_width = cast(int)from[0].length;
     if (from_width == 0) throw new Exception("Invalid width of 0");
 
-    int height = cast(int)to.length;
-    if (height == 0) throw new Exception("Invalid height of 0");
-
     int width = cast(int)to[0].length;
     if (width == 0) throw new Exception("Invalid width of 0");
+
+    int height = cast(int)to.length;
+    if (height == 0) throw new Exception("Invalid height of 0");
 
 
     for (int py = 0; py < from_height; py++) {

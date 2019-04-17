@@ -116,6 +116,83 @@ private:
         return currentFloor.Bounds.Intersects(room) && room.X >= 0 && room.Y >= 0;
     }
 
+    bool addRoom(RoomData data, bool isSpecial = false) {
+
+        // If it can't connect retry.
+        if (!canRoomConnect(roomRef.schematic, data)) {
+            return false;
+        }
+
+
+        size_t[] targets = getMatchingConnections(roomRef.schematic, data);
+        if (targets.length == 0) {
+            return false;
+        }
+        size_t selection = random.Next(0, cast(int)targets.length);
+        Connection* target = &roomRef.schematic.connections[targets[selection]];
+
+        size_t[] recipients = getMatchingConnections(*target, data);
+        if (recipients.length == 0) {
+            return false;
+        }
+        selection = random.Next(0, cast(int)recipients.length);
+        Connection* recipient = &data.connections[recipients[selection]];
+
+        /*Vector2i posOffset = calculateRoomOffset(*target, Vector2i(roomRef.schematic.width, roomRef.schematic.height), *recipient, Vector2i(data.width, data.height));
+        Vector2i roomPosition = Vector2i(roomRef.position.X+posOffset.X, roomRef.position.Y+posOffset.Y);
+        */
+        Vector2i roomPosition;
+        Rectangle area;
+        switch(target.direction) {
+            case ConnectionDirection.Right:
+                roomPosition = Vector2i(roomRef.position.X+(target.x+1), roomRef.position.Y+(target.y-recipient.y));
+                break;
+
+            case ConnectionDirection.Left:
+                roomPosition = Vector2i(roomRef.position.X-(data.width), roomRef.position.Y+(target.y-recipient.y));
+                break;
+
+            case ConnectionDirection.Up:
+                roomPosition = Vector2i(roomRef.position.X+(target.x-recipient.x), roomRef.position.Y-(data.height));
+                break;
+
+            case ConnectionDirection.Down:
+                roomPosition = Vector2i(roomRef.position.X+(target.x-recipient.x), roomRef.position.Y+(target.y+1));
+                break;
+
+            // This should never be called, but it needs to be here for D to not complain
+            default: assert(0);
+        }
+        area = new Rectangle(roomPosition.X, roomPosition.Y, data.width, data.height);
+
+        
+        if (intersectsRoom(area)) {
+            return false;
+        }
+        if (!isSpecial && !inbounds(area)) {
+            return false;
+        }
+        area = new Rectangle(roomPosition.X, roomPosition.Y, data.width, data.height);
+        //Logger.VerboseDebug("{0} <- {1}", roomPosition, posOffset);
+        
+        // Mark them as connected (so that we don't try to reuse the connections and get weird room fusions)
+        target.connect();
+        recipient.connect();
+
+        setRoom(data, roomPosition);
+
+        // make doors between the 2.
+        roomRef.MakeDoor(Vector2i(target.x, target.y));
+
+        roomRefId = currentFloor.rooms.length-1;
+        roomRef = currentFloor.rooms[roomRefId];
+        roomRef.MakeDoor(Vector2i(recipient.x, recipient.y));
+
+        return true;
+    }
+
+    size_t roomRefId = 0;
+    Room roomRef;
     void generateLevelGeometry(FloorData floor) {
         Logger.Info("Generating level geometry...");
         currentFloor = new Floor(parent, floor.size.width, floor.size.height, 60, 60);
@@ -124,8 +201,8 @@ private:
         // Set initial starting room.
         while(currentFloor.rooms.length <= 2) {
             setRoom(getRoomData(floor.rooms.start), Vector2i(0, 0));
-            size_t roomRefId = 0;
-            Room roomRef = currentFloor.rooms[roomRefId];
+            roomRefId = 0;
+            roomRef = currentFloor.rooms[roomRefId];
 
             ptrdiff_t failedOrientation = 0;
             size_t placementAttempts = 0;
@@ -147,88 +224,32 @@ private:
                 // Get a random room from the room pool
                 RoomData data = getRoomData(floor.rooms.rooms[random.Next(0, cast(int)floor.rooms.rooms.length)]);
 
-                // If it can't connect retry.
-                if (!canRoomConnect(roomRef.schematic, data)) {
+                if (!addRoom(data)) {
                     failedOrientation++;
                     continue;
                 }
-
-
-                size_t[] targets = getMatchingConnections(roomRef.schematic, data);
-                if (targets.length == 0) {
-                    failedOrientation++;
-                    continue;
-                }
-                size_t selection = random.Next(0, cast(int)targets.length);
-                Connection* target = &roomRef.schematic.connections[targets[selection]];
-
-                size_t[] recipients = getMatchingConnections(*target, data);
-                if (recipients.length == 0) {
-                    failedOrientation++;
-                    continue;
-                }
-                selection = random.Next(0, cast(int)recipients.length);
-                Connection* recipient = &data.connections[recipients[selection]];
-
-                /*Vector2i posOffset = calculateRoomOffset(*target, Vector2i(roomRef.schematic.width, roomRef.schematic.height), *recipient, Vector2i(data.width, data.height));
-                Vector2i roomPosition = Vector2i(roomRef.position.X+posOffset.X, roomRef.position.Y+posOffset.Y);
-                */
-                Vector2i roomPosition;
-                Rectangle area;
-                switch(target.direction) {
-                    case ConnectionDirection.Right:
-                        roomPosition = Vector2i(roomRef.position.X+(target.x+1), roomRef.position.Y+(target.y-recipient.y));
-                        break;
-
-                    case ConnectionDirection.Left:
-                        roomPosition = Vector2i(roomRef.position.X-(data.width), roomRef.position.Y+(target.y-recipient.y));
-                        break;
-
-                    case ConnectionDirection.Up:
-                        roomPosition = Vector2i(roomRef.position.X+(target.x-recipient.x), roomRef.position.Y-(data.height));
-                        break;
-
-                    case ConnectionDirection.Down:
-                        roomPosition = Vector2i(roomRef.position.X+(target.x-recipient.x), roomRef.position.Y+(target.y+1));
-                        break;
-
-                    // This should never be called, but it needs to be here for D to not complain
-                    default: assert(0);
-                }
-                area = new Rectangle(roomPosition.X, roomPosition.Y, data.width, data.height);
-
-                
-                if (intersectsRoom(area)) {
-                    failedOrientation++;
-                    continue;
-                }
-                if (!inbounds(area)) {
-                    failedOrientation++;
-                    continue;
-                }
-                area = new Rectangle(roomPosition.X, roomPosition.Y, data.width, data.height);
-                //Logger.VerboseDebug("{0} <- {1}", roomPosition, posOffset);
-                
-                // Mark them as connected (so that we don't try to reuse the connections and get weird room fusions)
-                target.connect();
-                recipient.connect();
-
-                setRoom(data, roomPosition);
-
-                // make doors between the 2.
-                roomRef.MakeDoor(Vector2i(target.x, target.y));
-
-                roomRefId = currentFloor.rooms.length-1;
-                roomRef = currentFloor.rooms[roomRefId];
-                roomRef.MakeDoor(Vector2i(recipient.x, recipient.y));
             }
-            if (currentFloor.rooms.length <= 1) Clear();
+
+            while(!addRoom(getRoomData(floor.rooms.end), true)) {
+                // retry untill it works.
+            }
+
+            if (currentFloor.rooms.length <= 1) {
+                Clear();
+                continue;
+            }
+
+
         }
         Logger.Info("Geometry generated...");
         Logger.Info("Sorting geometry...");
-        import std.algorithm.sorting : sort;
+        //schwartzSort!((a, b) {return a.position.X + a.schematic.width <= b.position.X || a.position.Y + a.schematic.height <= b.position.Y;})();
+        //sort!(q{a.position.X+a.position.Y > b.position.X-b.position.Y})(currentFloor.rooms);
 
-        sort!(q{a.DrawArea.Y > b.DrawArea.Y})(currentFloor.rooms);
+        import std.algorithm.sorting : multiSort;
+        // This long-ass sorting code makes sure that we draw the floor in the right order
+        // If you remove this the game will look stupid.
+        multiSort!(q{a.DrawArea.Center.Y > b.DrawArea.Center.Y}, q{a.DrawArea.Center.X > b.DrawArea.Center.X})(currentFloor.rooms);
 
         Logger.Success("Floor generated successfully!");
     }
@@ -297,6 +318,7 @@ private:
 public:
     /// Reference height used for calculating depth
     float referenceHeight;
+    float referenceWidth;
     float sortPosition;
     Room[] rooms;
     Rectangle Bounds;
@@ -305,6 +327,7 @@ public:
 
     this(World parent, size_t maxWidth, size_t maxHeight, size_t tileWidth, size_t tileHeight) {
         referenceHeight = maxHeight*tileHeight;
+        referenceWidth  = maxWidth*tileWidth;
         collissionMask = new bool[][](maxWidth*tileWidth, cast(size_t)referenceHeight);
 
         this.Bounds = new Rectangle(0, 0, cast(int)maxWidth, cast(int)maxHeight);
@@ -312,7 +335,7 @@ public:
     }
 
     void Draw(SpriteBatch spriteBatch) {
-        foreach(room; rooms) {
+        foreach_reverse(room; rooms) {
             room.Draw(spriteBatch);
         }
     }

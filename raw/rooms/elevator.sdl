@@ -1,0 +1,21 @@
+id "elevator"
+room_texture "floor_wood_brick"
+classname "plaster_w"
+
+width 5
+height 5
+
+walls {
+}
+
+connections {
+    connection x=0 y=2 direction="left"
+    connection x=4 y=2 direction="right"
+
+    connection x=2 y=0 direction="up"
+    connection x=2 y=4 direction="down"
+}
+
+floorplan {
+    door0 x=3 y=3 classname="door"
+}
