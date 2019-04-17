@@ -3,14 +3,14 @@ room_texture "floor_wood_brick"
 classname "plaster_b"
 
 width 5
-height 20
+height 10
 
 walls {
 }
 
 connections {
-    connection x=2 y=19  direction="down"
-    connection x=2 y=0  direction="up"
+    connection x=2 y=0 direction="up"
+    connection x=2 y=9 direction="down"
 }
 
 floorplan {

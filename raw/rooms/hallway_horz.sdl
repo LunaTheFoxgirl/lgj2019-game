@@ -2,14 +2,14 @@ id "hallway_horz"
 room_texture "floor_wood_brick"
 classname "plaster_b"
 
-width 20
+width 10
 height 5
 
 walls {
 }
 
 connections {
-    connection x=19 y=2 direction="right"
+    connection x=9 y=2 direction="right"
     connection x=0 y=2 direction="left"
 }
 

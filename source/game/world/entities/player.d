@@ -15,6 +15,7 @@ private:
 
     enum MoveSpeedConst = 1f;
     enum RunMultConst = 1.8f;
+    enum collissionAuraConst = 8;
 
 public:
     this(World parent) {
@@ -42,26 +43,35 @@ public:
         animation.ChangeAnimation("idle", true);
         float diagSpeed = kstate.IsKeyDown(Keys.A) || kstate.IsKeyDown(Keys.D) ? 2 : 1;
         if (kstate.IsKeyDown(Keys.W)) {
-            Position.Y -= (MoveSpeedConst/diagSpeed)*moveSpeedMultiplier;
-            animation.ChangeAnimation("walk", true);
+            if (!willCollideWithWorld(Vector2(Position.X, Position.Y-collissionAuraConst))) {
+                Position.Y -= (MoveSpeedConst/diagSpeed)*moveSpeedMultiplier;
+                animation.ChangeAnimation("walk", true);
+            }
         }
         
         if (kstate.IsKeyDown(Keys.S)) {
-            Position.Y += (MoveSpeedConst/diagSpeed)*moveSpeedMultiplier;
-            animation.ChangeAnimation("walk", true);
+            if (!willCollideWithWorld(Vector2(Position.X, Position.Y+collissionAuraConst))) {
+                Position.Y += (MoveSpeedConst/diagSpeed)*moveSpeedMultiplier;
+                animation.ChangeAnimation("walk", true);
+            }
         }
 
         if (kstate.IsKeyDown(Keys.A)) {
             flip = SpriteFlip.None;
-            Position.X -= MoveSpeedConst*moveSpeedMultiplier;
-            animation.ChangeAnimation("walk", true);
+            if (!willCollideWithWorld(Vector2(Position.X - collissionAuraConst, Position.Y))) {
+                Position.X -= MoveSpeedConst*moveSpeedMultiplier;
+                animation.ChangeAnimation("walk", true);
+            }
         }
         
         if (kstate.IsKeyDown(Keys.D)) {
-            Position.X += MoveSpeedConst*moveSpeedMultiplier;
-            flip = SpriteFlip.FlipVertical;
-            animation.ChangeAnimation("walk", true);
+            if (!willCollideWithWorld(Vector2(Position.X + collissionAuraConst, Position.Y))) {
+                Position.X += MoveSpeedConst*moveSpeedMultiplier;
+                flip = SpriteFlip.FlipVertical;
+                animation.ChangeAnimation("walk", true);
+            }
         }
+
         if (!lkstate.IsKeyDown(Keys.R) && kstate.IsKeyDown(Keys.R)) {
             parent.Floor.Clear();
             parent.Floor.Generate();

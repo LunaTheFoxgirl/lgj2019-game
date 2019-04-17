@@ -26,8 +26,6 @@ public:
 
 
         uint expectedTilesHeight = (tileHeight*areaHeight)*2;
-        //uint expectedWidth = width+(areaWidth*width);
-
 
         Logger.Info("{0} {1}", expectedWidth, expectedHeight);
         Color[][] outBuffer = Texture2DEffectors.NewCanvas(expectedWidth, expectedHeight, Color.Transparent);
@@ -45,13 +43,6 @@ public:
     }
 }
 private:
-
-import polyplex.utils.random;
-__gshared Random r;
-
-shared static this() {
-    if (r is null) r = new Random();
-}
 
 // Slightly faster superimpose function that uses the already declared output (to)
 // Saves a little bit of memory allocation

@@ -34,4 +34,8 @@ public:
 
     /// Initialization function
     abstract void Init();
+
+    bool willCollideWithWorld(Vector2 pos) {
+        return parent.Floor.doesFeetCollide(pos);
+    }
 }

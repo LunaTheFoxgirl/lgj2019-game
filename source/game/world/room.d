@@ -33,23 +33,23 @@ private:
     Floor parent;
     Texture2D floorTexture;
 
-    void placeWallSegment(Vector2i position, Vector2i gridPosition, string classname) {
+    void placeWallSegment(Vector2i position, Vector2i gridPosition, string classname, float offsetHeight) {
 
         Rectangle pos = new Rectangle();
         Vector2i posx = getWallOffset(position+gridPosition, Vector2i(60, 60));
         pos.X = posx.X;
-        pos.Y = posx.Y;//+(floorTexture.Height/2)-60;
+        pos.Y = cast(int)offsetHeight+posx.Y;//+(floorTexture.Height/2)-60;
         pos.Width = 60;
         pos.Height = 60;
         walls[gridPosition.X][gridPosition.Y] = new Wall(this, pos, classname);
     }
 
-    void drawWallSegLine(Vector2i position, WallDefinition exwall) {
+    void drawWallSegLine(Vector2i position, WallDefinition exwall, float offsetHeight) {
         
         // Vertical line...
         if (exwall.start.x == exwall.end.x) {
             foreach(y; exwall.start.y..exwall.end.y) {
-                placeWallSegment(position, Vector2i(exwall.start.x, y), exwall.classname !is null ? exwall.classname : schematic.classname);
+                placeWallSegment(position, Vector2i(exwall.start.x, y), exwall.classname !is null ? exwall.classname : schematic.classname, offsetHeight);
             }
             return;
         }
@@ -63,11 +63,11 @@ private:
 
         while (x < exwall.end.x) {
             if (p >= 0) {
-                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname);
+                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname, offsetHeight);
                 y++;
                 p += 2*dy-2*dx;
             } else {
-                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname);
+                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname, offsetHeight);
                 p += 2*dy;
             }
             x++;
@@ -82,7 +82,7 @@ public:
     Vector2i position;
 
     /// Generate the content of the room
-    void Generate(Vector2i position) {
+    void Generate(Vector2i position, float offsetHeight) {
         walls = new Wall[][](schematic.width, schematic.height);
         this.position = position;
 
@@ -107,17 +107,17 @@ public:
             foreach(y; 0..walls[x].length) {
                 if (x > 0 && x < walls.length-1 && y > 0 && y < walls[x].length-1) continue;
 
-                placeWallSegment(position, Vector2i(cast(int)x, cast(int)y), schematic.classname);
+                placeWallSegment(position, Vector2i(cast(int)x, cast(int)y), schematic.classname, offsetHeight);
             }
         }
 
         // Apply all that fancy stuff
-        DrawArea = new Rectangle(cast(int)isoSize.X, cast(int)isoSize.Y-(this.floorTexture.Height/2)+60, this.floorTexture.Width, this.floorTexture.Height);
+        DrawArea = new Rectangle(cast(int)isoSize.X, cast(int)(isoSize.Y-(this.floorTexture.Height/2)+60)+cast(int)offsetHeight, this.floorTexture.Width, this.floorTexture.Height);
         
 
         // Generate custom walls
         foreach(wall; schematic.walls) {
-            drawWallSegLine(position, wall);
+            drawWallSegLine(position, wall, offsetHeight);
         }
     }
 
@@ -158,15 +158,15 @@ public:
     void DrawFloor(SpriteBatch spriteBatch) {
         int segHeight = 30;
 
-        // drawAreaTmp.X = DrawArea.X;
-        // drawAreaTmp.Y = DrawArea.Y;
-        // drawAreaTmp.Width = DrawArea.Width;
-        // drawAreaTmp.Height = DrawArea.Height;
-        // foreach_reverse(i; 0..40) {
-        //     drawAreaTmp.Y = DrawArea.Y+(i*segHeight)+segHeight;
+        drawAreaTmp.X = DrawArea.X;
+        drawAreaTmp.Y = DrawArea.Y;
+        drawAreaTmp.Width = DrawArea.Width;
+        drawAreaTmp.Height = DrawArea.Height;
+        foreach_reverse(i; 0..40) {
+            drawAreaTmp.Y = DrawArea.Y+(i*segHeight)+segHeight;
 
-        //     spriteBatch.Draw(this.floorTexture, drawAreaTmp, this.floorTexture.Size, Color.White);
-        // }
+            spriteBatch.Draw(this.floorTexture, drawAreaTmp, this.floorTexture.Size, Color.White);
+        }
 
         spriteBatch.Draw(this.floorTexture, DrawArea, this.floorTexture.Size, 0f, Vector2(0, 0), Color.White, SpriteFlip.None);
     }

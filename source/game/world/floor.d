@@ -5,6 +5,7 @@ import game.data.floorconfig;
 import polyplex;
 import game.world;
 import polyplex.utils.random;
+import game.content;
 
 /// Get the offset for a wall segment
 Vector2i getWallOffset(Vector2i position, Vector2i size) {
@@ -69,28 +70,6 @@ private:
         return matches;
     }
 
-    // Vector2i calculateRoomOffset(Connection from, Vector2i roomSizeA, Connection to, Vector2i roomSizeB) {
-    //     Point rza = Point(roomSizeA.X, roomSizeA.Y);
-    //     Point rzb = Point(roomSizeB.X, roomSizeB.Y);
-    //     Point a = from.toConnectionPoint(rza);
-    //     Point b = to.toConnectionPoint(rzb);
-
-    //     switch(from.direction) {
-    //         case ConnectionDirection.Left:
-    //             return Vector2i(a.x-b.x, a.y-b.y);
-
-    //         case ConnectionDirection.Up:
-    //             return Vector2i(a.x-b.x, a.y-b.y);
-
-    //         case ConnectionDirection.Down:
-    //             return Vector2i(a.x-b.x, a.y-b.y);
-
-    //         case ConnectionDirection.Right:
-    //             return Vector2i(a.x-b.x, a.y-b.y);
-    //         default: assert(0);
-    //     }
-    // }
-
     RoomData getRoomData(string nameof) {
         import std.format : format;
         return fromResource!RoomData("rooms/%s".format(nameof));
@@ -98,7 +77,7 @@ private:
 
     void setRoom(RoomData data, Vector2i at) {
         Room room = new Room(currentFloor, data);
-        room.Generate(Vector2i(at.X, at.Y));
+        room.Generate(Vector2i(at.X, at.Y), currentFloor.referenceHeight/2);
         Logger.Info("Placed {0} at <{1},{2}> uwu", data.name_, at.X, at.Y);
         currentFloor.rooms ~= room;
     }
@@ -138,9 +117,6 @@ private:
         selection = random.Next(0, cast(int)recipients.length);
         Connection* recipient = &data.connections[recipients[selection]];
 
-        /*Vector2i posOffset = calculateRoomOffset(*target, Vector2i(roomRef.schematic.width, roomRef.schematic.height), *recipient, Vector2i(data.width, data.height));
-        Vector2i roomPosition = Vector2i(roomRef.position.X+posOffset.X, roomRef.position.Y+posOffset.Y);
-        */
         Vector2i roomPosition;
         Rectangle area;
         switch(target.direction) {
@@ -173,7 +149,6 @@ private:
             return false;
         }
         area = new Rectangle(roomPosition.X, roomPosition.Y, data.width, data.height);
-        //Logger.VerboseDebug("{0} <- {1}", roomPosition, posOffset);
         
         // Mark them as connected (so that we don't try to reuse the connections and get weird room fusions)
         target.connect();
@@ -204,6 +179,10 @@ private:
             roomRefId = 0;
             roomRef = currentFloor.rooms[roomRefId];
 
+            // Pretty ugly "hack"
+            // Player should be positioned properly via level info.
+            parent.ThePlayer.Position = roomRef.DrawArea.Center();
+
             ptrdiff_t failedOrientation = 0;
             size_t placementAttempts = 0;
             enum placementThreshold = 10;
@@ -221,6 +200,11 @@ private:
                     continue;
                 }
 
+                if (placementAttempts > placementThreshold) {
+                    Clear();
+                    continue;
+                }
+
                 // Get a random room from the room pool
                 RoomData data = getRoomData(floor.rooms.rooms[random.Next(0, cast(int)floor.rooms.rooms.length)]);
 
@@ -228,6 +212,8 @@ private:
                     failedOrientation++;
                     continue;
                 }
+
+                placementAttempts = 0;
             }
 
             while(!addRoom(getRoomData(floor.rooms.end), true)) {
@@ -254,8 +240,47 @@ private:
         Logger.Success("Floor generated successfully!");
     }
 
-    void generateLevelCollission(FloorData floor) {
+    __gshared bool[][] maskSeq;
 
+    void generateLevelCollission(FloorData floor) {
+        if (maskSeq is null) {
+            Logger.Info("Generating mask info...");
+            Texture2D wallMask = AssetCache.Get!Texture2D("textures/world/walls_mask");
+            maskSeq = new bool[][](60, 60);
+            Color[][] maskSqCol = wallMask.Pixels();
+            foreach(y; 0..60) {
+                foreach(x; 0..60) {
+                    if (maskSqCol[y][x].Alpha > 128) {
+                        maskSeq[y][x] = true;
+                    }
+                }
+            }
+        }
+
+        Logger.Log("Generating world-collission, this might take a little...");
+
+        foreach(Room room; currentFloor.rooms) {
+            foreach(wallx; room.walls) {
+                foreach(wall; wallx) {
+                    if (wall is null) continue;
+                    
+                    ptrdiff_t dx = wall.DrawArea.X;
+                    ptrdiff_t dy = wall.DrawArea.Y;
+                    foreach(y; 0..wall.DrawArea.Height) {
+                        foreach(x; 0..wall.DrawArea.Width) {
+                            //Logger.Fatal("{0}", maskSeq);
+                            if (maskSeq[y][x]) {
+                                if (dx+x >= currentFloor.collissionMask.length) continue;
+                                if (dy+y >= currentFloor.collissionMask[0].length) continue;
+                                currentFloor.collissionMask[dx+x][dy+y] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Logger.Success("Done!");
     }
 
     void generateLevelEntities(FloorData floor) {
@@ -328,7 +353,7 @@ public:
     this(World parent, size_t maxWidth, size_t maxHeight, size_t tileWidth, size_t tileHeight) {
         referenceHeight = maxHeight*tileHeight;
         referenceWidth  = maxWidth*tileWidth;
-        collissionMask = new bool[][](maxWidth*tileWidth, cast(size_t)referenceHeight);
+        collissionMask = new bool[][](cast(size_t)referenceWidth+tileWidth, cast(size_t)referenceHeight+tileHeight);
 
         this.Bounds = new Rectangle(0, 0, cast(int)maxWidth, cast(int)maxHeight);
         this.parent = parent;
