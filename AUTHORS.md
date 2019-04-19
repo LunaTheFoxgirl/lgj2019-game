@@ -2,7 +2,7 @@
 ## Clipsey (Code)
 Github: https://github.com/Member1221
 
-Mastodon: https://mastodon.social/Clipsey
+Mastodon: https://mastodon.social/@Clipsey
 
 
 -----------------------------------------
