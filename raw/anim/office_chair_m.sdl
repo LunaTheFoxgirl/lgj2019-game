@@ -1,0 +1,15 @@
+width 30
+height 30
+
+animations {
+    "idle" {
+        frame frame=0 animation=0 timeout=8
+    }
+    
+    "attack" {
+        frame frame=0 animation=0 timeout=8
+        frame frame=1 animation=0 timeout=8
+        frame frame=2 animation=0 timeout=8
+        frame frame=3 animation=0 timeout=8
+    }
+}

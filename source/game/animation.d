@@ -35,8 +35,12 @@ public class Animation {
 		return animation_name;
 	}
 
-	public int AnimationFrame() {
+	public int AnimationFrameRaw() {
 		return frame;
+	}
+
+	public int AnimationFrame() {
+		return cast(int)(frame%Animations.animations[animation_name].length);
 	}
 
 	public void ChangeAnimation(string name, bool seamless = false) {
@@ -60,6 +64,10 @@ public class Animation {
 
 	public int GetAnimationTimeout(int offset = 0) {
 		return Animations.animations[animation_name][(frame+offset)%Animations.animations[animation_name].length].timeout;
+	}
+
+	public int FrameCounter() {
+		return frame_counter;
 	}
 
 	public void Update(int timeoutForce = 0) {

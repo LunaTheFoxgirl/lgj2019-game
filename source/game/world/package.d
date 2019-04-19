@@ -5,6 +5,7 @@ import game.entities;
 //import game.world.room;
 import game.world.floor;
 import polyplex.core.render.gl.debug2d;
+import game.ui.arrow;
 
 public class World {
 private:
@@ -12,6 +13,9 @@ private:
 
     // Music
     Music track0;
+
+    // UI
+    UIArrow uiArrow;
 
     // Rendering stuff
     Framebuffer EffectBuffer;
@@ -71,8 +75,12 @@ public:
         Floor = new FloorManager(this);
 
         Floor.Generate();
-        // track0 = Content.Load!Music("music/02");
-        // track0.Play(true);
+
+        uiArrow = new UIArrow();
+        uiArrow.endRoom = this.Floor.endRoom;
+        uiArrow.world = this;
+        track0 = Content.Load!Music("music/02");
+        track0.Play(true);
     }
 
     void Update(GameTimes gameTime) {
@@ -116,5 +124,10 @@ public:
 
 
         //drawFBO();
+
+        // UI
+        spriteBatch.Begin();
+        uiArrow.Draw(spriteBatch);
+        spriteBatch.End();
     }
 }

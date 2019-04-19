@@ -24,6 +24,7 @@ class FloorManager {
 private:
     FloorConfig config;
     Floor currentFloor;
+
     size_t currentLevel = 0;
     World parent;
 
@@ -178,6 +179,7 @@ private:
             setRoom(getRoomData(floor.rooms.start), Vector2i(0, 0));
             roomRefId = 0;
             roomRef = currentFloor.rooms[roomRefId];
+            startRoom = roomRef;
 
             // Pretty ugly "hack"
             // Player should be positioned properly via level info.
@@ -219,6 +221,8 @@ private:
             while(!addRoom(getRoomData(floor.rooms.end), true)) {
                 // retry untill it works.
             }
+            roomRef = currentFloor.rooms[roomRefId];
+            endRoom = roomRef;
 
             if (currentFloor.rooms.length <= 1) {
                 Clear();
@@ -293,6 +297,9 @@ private:
 public:
     float referenceHeight;
 
+    Room startRoom;
+    Room endRoom;
+
     this(World parent) {
         config = fromResource!FloorConfig("floorconfig");
         Logger.Debug("{0}", config);
@@ -353,7 +360,7 @@ public:
     this(World parent, size_t maxWidth, size_t maxHeight, size_t tileWidth, size_t tileHeight) {
         referenceHeight = maxHeight*tileHeight;
         referenceWidth  = maxWidth*tileWidth;
-        collissionMask = new bool[][](cast(size_t)referenceWidth+tileWidth, cast(size_t)referenceHeight+tileHeight);
+        collissionMask = new bool[][](cast(size_t)(referenceWidth+tileWidth)*2, (cast(size_t)referenceHeight+tileHeight)*2);
 
         this.Bounds = new Rectangle(0, 0, cast(int)maxWidth, cast(int)maxHeight);
         this.parent = parent;

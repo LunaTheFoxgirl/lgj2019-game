@@ -3,6 +3,8 @@ import polyplex;
 import game.gamestate;
 import game.content;
 import game.data;
+import game.data.texdef;
+import game.entities;
 
 public class GameMain : Game {
 private:
@@ -35,6 +37,8 @@ public:
         GameContext.initContext(this);
         setupGameCache();
         initializeSDLLoader();
+        initializeTexdef();
+        loadSFX();
 
         // Start game state managment
         import game.gamestates.mainstate : MainGameState;

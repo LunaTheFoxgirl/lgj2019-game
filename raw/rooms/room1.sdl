@@ -1,6 +1,6 @@
 id "room1"
 room_texture "floor_wood_brick"
-classname "plaster_w"
+classname "plaster_white"
 
 width 11
 height 11

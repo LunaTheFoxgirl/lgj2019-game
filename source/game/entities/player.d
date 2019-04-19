@@ -1,5 +1,5 @@
 module game.entities.player;
-import game.entity;
+import game.entities;
 import game.animation;
 import game.world;
 import polyplex;
@@ -27,7 +27,7 @@ public:
         this.texture = AssetCache.Get!Texture2D("textures/entities/player/player");
         
         import std.file : readText;
-        animation = new Animation(fromSDL(readText("content/anim/anim_player.sdl")));
+        animation = new Animation(fromSDL(readText("content/anim/player.sdl")));
         
         animation.ChangeAnimation("idle");
 
@@ -77,6 +77,12 @@ public:
             parent.Floor.Generate();
         }
 
+        int frame = animation.AnimationFrame();
+
+        if ((frame == 1 || frame == 4) && animation.FrameCounter == 1) {
+            playFootstep();
+        }
+
         this.DrawArea.X = cast(int)Position.X-(this.DrawArea.Width/2);
         this.DrawArea.Y = cast(int)Position.Y-this.DrawArea.Height;
 
@@ -85,10 +91,6 @@ public:
     }
 
     override void Draw(SpriteBatch spriteBatch, GameTimes gameTime) {
-        //Logger.Info("PlayerDepth={0}", this.DrawArea.Y/parent.Floor.referenceHeight);
-        
-        float layer = (parent.Floor.referenceHeight-Position.Y)/parent.Floor.referenceHeight;
-        
         spriteBatch.Draw(this.texture, DrawArea, new Rectangle(
             animation.GetAnimationX(), animation.GetAnimationY(), 30, 30
         ), 0f, Vector2(15, 15), Color.White, flip, layer);

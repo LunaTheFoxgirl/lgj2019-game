@@ -1,6 +1,6 @@
 id "hallway_vert"
 room_texture "floor_wood_brick"
-classname "plaster_b"
+classname "plaster_blue"
 
 width 5
 height 10

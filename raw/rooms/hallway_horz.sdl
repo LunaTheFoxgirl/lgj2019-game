@@ -1,6 +1,6 @@
 id "hallway_horz"
 room_texture "floor_wood_brick"
-classname "plaster_b"
+classname "plaster_blue"
 
 width 10
 height 5

@@ -5,6 +5,7 @@ import game.content;
 import game.world;
 import game.data.floordata;
 import game.world.floor;
+import game.data.texdef;
 import std.format;
 
 struct RoomFloorCache {
@@ -33,7 +34,7 @@ private:
     Floor parent;
     Texture2D floorTexture;
 
-    void placeWallSegment(Vector2i position, Vector2i gridPosition, string classname, float offsetHeight) {
+    void placeWallSegment(Vector2i position, Vector2i gridPosition, string classname, string variant, float offsetHeight) {
 
         Rectangle pos = new Rectangle();
         Vector2i posx = getWallOffset(position+gridPosition, Vector2i(60, 60));
@@ -41,7 +42,7 @@ private:
         pos.Y = cast(int)offsetHeight+posx.Y;//+(floorTexture.Height/2)-60;
         pos.Width = 60;
         pos.Height = 60;
-        walls[gridPosition.X][gridPosition.Y] = new Wall(this, pos, classname);
+        walls[gridPosition.X][gridPosition.Y] = new Wall(this, pos, classname, variant);
     }
 
     void drawWallSegLine(Vector2i position, WallDefinition exwall, float offsetHeight) {
@@ -49,7 +50,7 @@ private:
         // Vertical line...
         if (exwall.start.x == exwall.end.x) {
             foreach(y; exwall.start.y..exwall.end.y) {
-                placeWallSegment(position, Vector2i(exwall.start.x, y), exwall.classname !is null ? exwall.classname : schematic.classname, offsetHeight);
+                placeWallSegment(position, Vector2i(exwall.start.x, y), exwall.classname !is null ? exwall.classname : schematic.classname, exwall.variant, offsetHeight);
             }
             return;
         }
@@ -63,11 +64,11 @@ private:
 
         while (x < exwall.end.x) {
             if (p >= 0) {
-                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname, offsetHeight);
+                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname, exwall.variant, offsetHeight);
                 y++;
                 p += 2*dy-2*dx;
             } else {
-                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname, offsetHeight);
+                placeWallSegment(position, Vector2i(x, y), exwall.classname !is null ? exwall.classname : schematic.classname, exwall.variant, offsetHeight);
                 p += 2*dy;
             }
             x++;
@@ -85,8 +86,6 @@ public:
     void Generate(Vector2i position, float offsetHeight) {
         walls = new Wall[][](schematic.width, schematic.height);
         this.position = position;
-
-        Logger.Info("{0} ({1})", position, schematic.name_);
 
         if (!ROOM_CACHE.Has(schematic.name_)) {
             if (!FLOOR_BUILDER.HasFloor(schematic.roomTexture)) {
@@ -107,7 +106,7 @@ public:
             foreach(y; 0..walls[x].length) {
                 if (x > 0 && x < walls.length-1 && y > 0 && y < walls[x].length-1) continue;
 
-                placeWallSegment(position, Vector2i(cast(int)x, cast(int)y), schematic.classname, offsetHeight);
+                placeWallSegment(position, Vector2i(cast(int)x, cast(int)y), schematic.classname, TEXTURE_DEFINITIONS.firstVariant(schematic.classname).id, offsetHeight);
             }
         }
 
@@ -117,7 +116,24 @@ public:
 
         // Generate custom walls
         foreach(wall; schematic.walls) {
-            drawWallSegLine(position, wall, offsetHeight);
+            switch (wall.mode) {
+                case WallDefMode.Line:
+                    drawWallSegLine(position, wall, offsetHeight);
+                    break;
+                case WallDefMode.Single:
+                    placeWallSegment(position, Vector2i(wall.start.x, wall.start.y), wall.classname, wall.variant, offsetHeight);
+                    break;
+                case WallDefMode.Rect:
+                    break;
+                case WallDefMode.FilledRect:
+                    foreach(x; wall.start.x..wall.end.x+1) {
+                        foreach(y; wall.start.y..wall.end.y+1) {
+                            placeWallSegment(position, Vector2i(x, y), wall.classname, wall.variant, offsetHeight);
+                        }
+                    }
+                    break;
+                default: break;
+            }
         }
     }
 
@@ -186,10 +202,12 @@ public:
     Texture2D texture;
 
     /// The variant of the texture associated with this wall
-    string variant;
+    Variant* variant;
 
 
     Rectangle DrawArea;
+
+    Rectangle FetchArea;
 
     /*
         Cosmetic
@@ -203,13 +221,19 @@ public:
 
 
     /// The constructor (duh!)
-    this(Room parent, Rectangle area, string textureName, string variant = "default") {
-        this.texture = AssetCache.Get!Texture2D("textures/world/walls/walls_%s".format(textureName));
-        this.variant = variant;
+    this(Room parent, Rectangle area, string classname, string variant = "default") {
+        this.texture = AssetCache.Get!Texture2D(TEXTURE_DEFINITIONS.getDefinitionFor(classname).path);
+        this.variant = TEXTURE_DEFINITIONS.getVariant(classname, variant);
+        if (this.variant is null) {
+            this.variant = TEXTURE_DEFINITIONS.firstVariant(classname);
+        }
         this.selfColor = Color.White;
         this.colorStep = 1f;
         this.DrawArea = area;
         this.parent = parent;
+
+
+        this.FetchArea = new Rectangle(this.variant.x, this.variant.y, this.variant.w, this.variant.h);
     }
 
     void Draw(SpriteBatch spriteBatch, float referenceHeight, Rectangle playerRect) {
@@ -228,6 +252,6 @@ public:
             colorStep += 0.025f;
         }
         selfColor.Alpha = cast(int)Mathf.Cosine(128f, 255f, colorStep);
-        spriteBatch.Draw(texture, DrawArea, new Rectangle(0, 0, 60, 60), 0, Vector2(0, 0), selfColor, SpriteFlip.None, layer);
+        spriteBatch.Draw(texture, DrawArea, FetchArea, 0, Vector2(0, 0), selfColor, SpriteFlip.None, layer);
     }
 }

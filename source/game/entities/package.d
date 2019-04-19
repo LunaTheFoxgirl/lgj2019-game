@@ -1,11 +1,8 @@
-module game.entity;
+module game.entities;
+public import game.entities.player;
+public import game.content;
 import polyplex;
 import game.world;
-
-public import game.content;
-
-public:
-
 
 abstract class Entity {
 public:
@@ -21,10 +18,14 @@ public:
     Rectangle DrawArea;
 
     /// Wether this entity is alive
-    bool Alive;
+    bool Alive() {
+        return Health <= 0;
+    }
 
     /// Wether this entitiy is active
     bool Active;
+
+    float Health = 100f;
 
     /// Update function
     abstract void Update(GameTimes gameTime);
@@ -35,7 +36,29 @@ public:
     /// Initialization function
     abstract void Init();
 
+    void playFootstep() {
+        footStep.Pitch = 1+(random.NextFloat()/5);
+        footStep.Play();
+    }
+
     bool willCollideWithWorld(Vector2 pos) {
         return parent.Floor.doesFeetCollide(pos);
     }
+
+    float layer() {
+        return (parent.Floor.referenceHeight-Position.Y)/parent.Floor.referenceHeight;
+    }
+}
+
+
+
+import polyplex.utils.random;
+private __gshared SoundEffect footStep;
+private __gshared Random random;
+
+void loadSFX() {
+    footStep = AssetCache.Get!SoundEffect("sfx/footstep/wood");
+    footStep.Gain = 0.4f;
+
+    random = new Random();
 }

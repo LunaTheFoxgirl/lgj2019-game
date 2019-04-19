@@ -1,4 +1,4 @@
-module game.ingame.thing;
+module game.ingame.things;
 import polyplex;
 
 public abstract class Thing {

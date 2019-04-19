@@ -40,12 +40,40 @@ struct Point {
     int y;
 }
 
+enum WallDefMode {
+    Line =          "line",
+    Single =        "single",
+    Rect =          "rect",
+    FilledRect =    "filledrect"
+}
+
 struct WallDefinition {
     /// Where the wall starts
+    @name("start")
+    @optional
     Point start;
 
+    @name("point")
+    @optional
+    @property Point point() {
+        return start;
+    }
+
+    @name("point")
+    @optional
+    @property void point(Point point) {
+        start = point;
+    }
+
+
     /// Where the wall ends
+    @optional
     Point end;
+
+    /// What mode the wall placement algorithm should use
+    @optional
+    WallDefMode mode = WallDefMode.Line;
+
 
     /// The texture of the wall
     @optional
