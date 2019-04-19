@@ -54,11 +54,17 @@ public:
 
 import polyplex.utils.random;
 private __gshared SoundEffect footStep;
+private __gshared Music music;
 private __gshared Random random;
 
 void loadSFX() {
+    random = new Random();
+    import std.conv : text;
     footStep = AssetCache.Get!SoundEffect("sfx/footstep/wood");
     footStep.Gain = 0.4f;
 
-    random = new Random();
+    immutable(int) num = random.Next(1, 8);
+    music = AssetCache.Get!Music("music/0"~num.text);
+    music.Play(true);
+    Logger.Info("Playing track 0{0}!...", num);
 }

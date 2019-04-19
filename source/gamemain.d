@@ -25,7 +25,7 @@ public:
     override void Init() {
         // Enable VSync
         Window.VSync = VSyncState.VSync;
-        Window.Title = "Office Rouglike Game";
+        Window.Title = "No Promo (Prototype)";
         Window.AllowResizing = true;
     }
 

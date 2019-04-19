@@ -11,9 +11,6 @@ public class World {
 private:
     SpriteBatch spriteBatch;
 
-    // Music
-    Music track0;
-
     // UI
     UIArrow uiArrow;
 
@@ -76,11 +73,10 @@ public:
 
         Floor.Generate();
 
+
         uiArrow = new UIArrow();
         uiArrow.endRoom = this.Floor.endRoom;
         uiArrow.world = this;
-        track0 = Content.Load!Music("music/02");
-        track0.Play(true);
     }
 
     void Update(GameTimes gameTime) {

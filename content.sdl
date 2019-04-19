@@ -52,4 +52,6 @@ recipe name="Music" {
     audio "music/03.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
     audio "music/04.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
     audio "music/05.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
+    audio "music/06.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
+    audio "music/07.ogg"    type="ogg"     author="Hydra"       license="CC (Creative Commons)"
 }
